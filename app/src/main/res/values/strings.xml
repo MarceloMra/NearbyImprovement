@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">NearbyImprovement</string>
+    <string name="service_id">com.example.nearbyimprovement</string>
+</resources>
