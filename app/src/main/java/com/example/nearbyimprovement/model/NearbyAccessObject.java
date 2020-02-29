@@ -167,14 +167,19 @@ public class NearbyAccessObject {
         this.nickname = nickname;
 
         if(patternComunicationObject != null){
-            if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
-                strategy = Strategy.P2P_POINT_TO_POINT;
-            }else if(patternComunicationObject.getComportamento() == Comportamento.PUBLISHER){
-                strategy = Strategy.P2P_STAR;
-            }else if(patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
-                strategy = Strategy.P2P_POINT_TO_POINT;
-            }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER){
-                strategy = Strategy.P2P_STAR;
+            switch (patternComunicationObject.getComportamento()) {
+                case SUBSCRIBER:
+                    strategy = Strategy.P2P_POINT_TO_POINT;
+                    break;
+                case PUBLISHER:
+                    strategy = Strategy.P2P_STAR;
+                    break;
+                case REQUESTER:
+                    strategy = Strategy.P2P_POINT_TO_POINT;
+                    break;
+                case REPLYER:
+                    strategy = Strategy.P2P_STAR;
+                    break;
             }
 
             this.patternComunicationObject = patternComunicationObject;
