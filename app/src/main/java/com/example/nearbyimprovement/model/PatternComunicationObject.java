@@ -6,6 +6,11 @@ public abstract class PatternComunicationObject {
     protected NearbyAccessObject nearbyAccessObject;
     protected Comportamento comportamento;
 
+    public Comportamento getComportamento() {
+        return comportamento;
+    }
+
+
 
     public void startAdvertising(){
 

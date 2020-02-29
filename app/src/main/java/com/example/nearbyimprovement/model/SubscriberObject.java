@@ -16,8 +16,4 @@ public class SubscriberObject extends PatternComunicationObject implements Recei
         return null;
     }
 
-    @Override
-    public Comportamento getComportamento() {
-        return null;
-    }
 }

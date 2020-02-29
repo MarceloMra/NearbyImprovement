@@ -3,8 +3,7 @@ package com.example.nearbyimprovement.model;
 import androidx.annotation.NonNull;
 
 import com.example.nearbyimprovement.R;
-import com.example.nearbyimprovement.interfaces.Receiver;
-import com.example.nearbyimprovement.interfaces.Sender;
+import com.example.nearbyimprovement.enums.Comportamento;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
@@ -23,40 +22,36 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 public class NearbyAccessObject {
     private final String SERVICE_ID;
-    private Receiver receiver;
-    private Sender sender;
+    private PatternComunicationObject patternComunicationObject;
     private String nickname;
     private Strategy strategy;
 
-    public NearbyAccessObject(Receiver r, Sender s) {
+    public void setPatternComunicationObject(PatternComunicationObject patternComunicationObject) {
+        this.patternComunicationObject = patternComunicationObject;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public NearbyAccessObject(PatternComunicationObject patternComunicationObject) {
         SERVICE_ID = GlobalApplication.getContext().getString(R.string.service_id);
 
-        if(r != null){
-            switch (r.getComportamento()){
-                case PUBLISHER: strategy = Strategy.P2P_STAR;
-                    break;
-                case SUBSCRIBER: strategy = Strategy.P2P_POINT_TO_POINT;
-                    break;
-                case REQ_REPLY: strategy = Strategy.P2P_STAR;
-                    break;
-                default: strategy = Strategy.P2P_STAR;
-                    break;
+        if(patternComunicationObject != null){
+            if(patternComunicationObject instanceof SubscriberObject){
+                strategy = Strategy.P2P_POINT_TO_POINT;
+            }else if(patternComunicationObject instanceof PublisherObject){
+                strategy = Strategy.P2P_STAR;
+            }else if(patternComunicationObject instanceof ReqReplyObject){
+                if(patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
+                    strategy = Strategy.P2P_POINT_TO_POINT;
+                }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER){
+                    strategy = Strategy.P2P_STAR;
+                }
             }
+
+            this.patternComunicationObject = patternComunicationObject;
         }
-        if(s != null){
-            switch (s.getComportamento()){
-                case PUBLISHER: strategy = Strategy.P2P_STAR;
-                    break;
-                case SUBSCRIBER: strategy = Strategy.P2P_POINT_TO_POINT;
-                    break;
-                case REQ_REPLY: strategy = Strategy.P2P_STAR;
-                    break;
-                default: strategy = Strategy.P2P_STAR;
-                    break;
-            }
-        }
-        this.receiver = r;
-        this.sender = s;
     }
 
     private final PayloadCallback mPayloadCallback = new PayloadCallback() {

@@ -13,9 +13,4 @@ public class PublisherObject extends PatternComunicationObject implements Sender
     public void send(byte[] dados, String endPointID) {
 
     }
-
-    @Override
-    public Comportamento getComportamento() {
-        return null;
-    }
 }

@@ -7,8 +7,8 @@ import com.google.android.gms.nearby.connection.Payload;
 
 public class ReqReplyObject extends PatternComunicationObject implements Receiver, Sender {
 
-    public ReqReplyObject() {
-        super.comportamento = Comportamento.REQ_REPLY;
+    public ReqReplyObject(Comportamento c) {
+        super.comportamento = c;
     }
 
     @Override
@@ -19,10 +19,5 @@ public class ReqReplyObject extends PatternComunicationObject implements Receive
     @Override
     public void send(byte[] dados, String endPointID) {
 
-    }
-
-    @Override
-    public Comportamento getComportamento() {
-        return null;
     }
 }
