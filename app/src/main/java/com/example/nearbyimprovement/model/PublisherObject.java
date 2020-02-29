@@ -36,6 +36,6 @@ public class PublisherObject extends PatternComunicationObject implements Sender
 
     @Override
     public void send(byte[] dados, String endPointID) {
-
+        nearbyAccessObject.send(endPointID, dados);
     }
 }

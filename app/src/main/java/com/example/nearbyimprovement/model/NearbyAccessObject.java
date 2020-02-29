@@ -73,10 +73,10 @@ public class NearbyAccessObject {
                     //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
                     if(patternComunicationObject instanceof SubscriberObject){
                         SubscriberObject so = (SubscriberObject) patternComunicationObject;
-                        so.receive(payload);
+                        so.receive(payload.asBytes(), endPointId);
                     }else if(patternComunicationObject instanceof ReqReplyObject){
                         ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
-                        rro.receive(payload);
+                        rro.receive(payload.asBytes(), endPointId);
                     }
             }
 
@@ -181,6 +181,11 @@ public class NearbyAccessObject {
 
             this.patternComunicationObject = patternComunicationObject;
         }
+    }
+
+    public void send(String endpointID, byte[] dados){
+        Payload p = Payload.fromBytes(dados);
+        Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).sendPayload(endpointID, p);
     }
 
     private void fecharConexao(String endpointID){

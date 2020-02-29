@@ -2,7 +2,6 @@ package com.example.nearbyimprovement.model;
 
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.interfaces.Receiver;
-import com.google.android.gms.nearby.connection.Payload;
 
 public class SubscriberObject extends PatternComunicationObject implements Receiver {
 
@@ -37,7 +36,7 @@ public class SubscriberObject extends PatternComunicationObject implements Recei
     }
 
     @Override
-    public void receive(Payload p) {
+    public void receive(byte[] dados, String endpointID) {
 
     }
 
