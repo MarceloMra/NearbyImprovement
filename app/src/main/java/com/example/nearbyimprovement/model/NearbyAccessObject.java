@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.nearbyimprovement.R;
 import com.example.nearbyimprovement.enums.Comportamento;
+import com.example.nearbyimprovement.enums.TipoPacote;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
@@ -20,7 +21,11 @@ import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class NearbyAccessObject {
     private final String SERVICE_ID;
@@ -31,55 +36,64 @@ public class NearbyAccessObject {
     private final PayloadCallback mPayloadCallback = new PayloadCallback() {
         @Override
         public void onPayloadReceived(String endPointId, Payload payload) {
-            String recv = new String(payload.asBytes(), StandardCharsets.UTF_8);
-            switch (recv){
-                case "-@-pub-@-":
-                    if(patternComunicationObject.getComportamento() != Comportamento.SUBSCRIBER){
-                        //fecha a conexão por incompatibilidade dos comportamentos
-                        fecharConexao(endPointId);
-                    }else{
-                        //notifica ao patternObject o endpointID do novo dispositivo conectado
-                        adicionarNovoEndpointID(endPointId);
-                    }
-                    break;
-                case "-@-sub-@-":
-                    if(patternComunicationObject.getComportamento() != Comportamento.PUBLISHER){
-                        //fecha a conexão por incompatibilidade dos comportamentos
-                        fecharConexao(endPointId);
-                    }else{
-                        //notifica ao patternObject o endpointID do novo dispositivo conectado
-                        adicionarNovoEndpointID(endPointId);
-                    }
-                    break;
-                case "-@-req-@-":
-                    if(patternComunicationObject.getComportamento() != Comportamento.REPLYER){
-                        //fecha a conexão por incompatibilidade dos comportamentos
-                        fecharConexao(endPointId);
-                    }else{
-                        //notifica ao patternObject o endpointID do novo dispositivo conectado
-                        adicionarNovoEndpointID(endPointId);
-                    }
-                    break;
-                case "-@-rep-@-":
-                    if(patternComunicationObject.getComportamento() != Comportamento.REQUESTER){
-                        //fecha a conexão por incompatibilidade dos comportamentos
-                        fecharConexao(endPointId);
-                    }else{
-                        //notifica ao patternObject o endpointID do novo dispositivo conectado
-                        adicionarNovoEndpointID(endPointId);
-                    }
-                    break;
-                default:
-                    //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
-                    if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
-                        SubscriberObject so = (SubscriberObject) patternComunicationObject;
-                        so.receive(payload.asBytes(), endPointId);
-                    }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
-                        ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
-                        rro.receive(payload.asBytes(), endPointId);
-                    }
+            Pacote pacote = null;
+            try {
+                pacote = (Pacote) deserialize(payload.asBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
 
+            if(pacote.getTipo() == TipoPacote.CONTROL){
+                switch ((String) pacote.getConteudo()){
+                    case "-@-pub-@-":
+                        if(patternComunicationObject.getComportamento() != Comportamento.SUBSCRIBER){
+                            //fecha a conexão por incompatibilidade dos comportamentos
+                            fecharConexao(endPointId);
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            adicionarNovoEndpointID(endPointId);
+                        }
+                        break;
+                    case "-@-sub-@-":
+                        if(patternComunicationObject.getComportamento() != Comportamento.PUBLISHER){
+                            //fecha a conexão por incompatibilidade dos comportamentos
+                            fecharConexao(endPointId);
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            adicionarNovoEndpointID(endPointId);
+                        }
+                        break;
+                    case "-@-req-@-":
+                        if(patternComunicationObject.getComportamento() != Comportamento.REPLYER){
+                            //fecha a conexão por incompatibilidade dos comportamentos
+                            fecharConexao(endPointId);
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            adicionarNovoEndpointID(endPointId);
+                        }
+                        break;
+                    case "-@-rep-@-":
+                        if(patternComunicationObject.getComportamento() != Comportamento.REQUESTER){
+                            //fecha a conexão por incompatibilidade dos comportamentos
+                            fecharConexao(endPointId);
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            adicionarNovoEndpointID(endPointId);
+                        }
+                        break;
+                }
+            }else if(pacote.getTipo() == TipoPacote.CONTENT){
+                //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
+                if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
+                    SubscriberObject so = (SubscriberObject) patternComunicationObject;
+                    so.receive(payload.asBytes(), endPointId);
+                }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
+                    ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
+                    rro.receive(payload.asBytes(), endPointId);
+                }
+            }
         }
 
         @Override
@@ -143,7 +157,13 @@ public class NearbyAccessObject {
                         case REPLYER: comp = "-@-rep-@-";
                             break;
                     }
-                    Payload p = Payload.fromBytes(comp.getBytes());
+                    Pacote pac = new Pacote(TipoPacote.CONTROL, comp);
+                    Payload p = null;
+                    try {
+                        p = Payload.fromBytes(serialize(pac));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).sendPayload(endpointId, p);
 
                     break;
@@ -184,6 +204,19 @@ public class NearbyAccessObject {
 
             this.patternComunicationObject = patternComunicationObject;
         }
+    }
+
+    public byte[] serialize(Object obj) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
+    }
+
+    public Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
     }
 
     public void send(String endpointID, byte[] dados){
