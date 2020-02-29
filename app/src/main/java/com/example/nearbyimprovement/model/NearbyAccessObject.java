@@ -28,42 +28,6 @@ public class NearbyAccessObject {
     private String nickname;
     private Strategy strategy;
 
-    public void setPatternComunicationObject(PatternComunicationObject patternComunicationObject) {
-        this.patternComunicationObject = patternComunicationObject;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public NearbyAccessObject(PatternComunicationObject patternComunicationObject) {
-        SERVICE_ID = GlobalApplication.getContext().getString(R.string.service_id);
-
-        if(patternComunicationObject != null){
-            if(patternComunicationObject instanceof SubscriberObject){
-                strategy = Strategy.P2P_POINT_TO_POINT;
-            }else if(patternComunicationObject instanceof PublisherObject){
-                strategy = Strategy.P2P_STAR;
-            }else if(patternComunicationObject instanceof ReqReplyObject){
-                if(patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
-                    strategy = Strategy.P2P_POINT_TO_POINT;
-                }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER){
-                    strategy = Strategy.P2P_STAR;
-                }
-            }
-
-            this.patternComunicationObject = patternComunicationObject;
-        }
-    }
-
-    private void fecharConexao(String endpointID){
-        com.google.android.gms.nearby.Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).disconnectFromEndpoint(endpointID);
-    }
-
-    private void adicionarNovoEndpointID(String endpointID){
-        patternComunicationObject.addNewEndpointID(endpointID);
-    }
-
     private final PayloadCallback mPayloadCallback = new PayloadCallback() {
         @Override
         public void onPayloadReceived(String endPointId, Payload payload) {
@@ -198,6 +162,34 @@ public class NearbyAccessObject {
         }
     };
 
+    public NearbyAccessObject(PatternComunicationObject patternComunicationObject) {
+        SERVICE_ID = GlobalApplication.getContext().getString(R.string.service_id);
+
+        if(patternComunicationObject != null){
+            if(patternComunicationObject instanceof SubscriberObject){
+                strategy = Strategy.P2P_POINT_TO_POINT;
+            }else if(patternComunicationObject instanceof PublisherObject){
+                strategy = Strategy.P2P_STAR;
+            }else if(patternComunicationObject instanceof ReqReplyObject){
+                if(patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
+                    strategy = Strategy.P2P_POINT_TO_POINT;
+                }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER){
+                    strategy = Strategy.P2P_STAR;
+                }
+            }
+
+            this.patternComunicationObject = patternComunicationObject;
+        }
+    }
+
+    private void fecharConexao(String endpointID){
+        com.google.android.gms.nearby.Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).disconnectFromEndpoint(endpointID);
+    }
+
+    private void adicionarNovoEndpointID(String endpointID){
+        patternComunicationObject.addNewEndpointID(endpointID);
+    }
+
     public void startAdvertising() {
         AdvertisingOptions advertisingOptions = new AdvertisingOptions.Builder().setStrategy(strategy).build();
         Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext())
@@ -240,6 +232,12 @@ public class NearbyAccessObject {
                         });
     }
 
+    public void setPatternComunicationObject(PatternComunicationObject patternComunicationObject) {
+        this.patternComunicationObject = patternComunicationObject;
+    }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
 }
