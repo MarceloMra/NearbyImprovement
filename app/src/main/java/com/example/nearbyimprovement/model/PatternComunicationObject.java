@@ -9,10 +9,6 @@ public abstract class PatternComunicationObject {
     protected Comportamento comportamento;
     private ArrayList<String> endpointIDsConnected;
 
-    public ArrayList<String> getEndpointIDsConnected() {
-        return endpointIDsConnected;
-    }
-
     public PatternComunicationObject() {
         endpointIDsConnected = new ArrayList<>();
     }
@@ -28,18 +24,26 @@ public abstract class PatternComunicationObject {
         nearbyAccessObject.startDiscovery();
     }
 
-    public void setNearbyAccessObject(NearbyAccessObject nearbyAccessObject) {
-        this.nearbyAccessObject = nearbyAccessObject;
-    }
-
     public void addNewEndpointID(String endpointID){
         endpointIDsConnected.add(endpointID);
         novaConexaoEfetuada(endpointID);
     }
 
     protected abstract void novaConexaoEfetuada(String endpointID);
+    public abstract void onSuccessStartAdvertising();
+    public abstract void onFeilureStartAdvertising(Exception e);
+    public abstract void onSuccessStartDiscovery();
+    public abstract void onFeilureStartDiscovery(Exception e);
 
     public void removeEndpointID(String endpointID){
         endpointIDsConnected.remove(endpointID);
+    }
+
+    public ArrayList<String> getEndpointIDsConnected() {
+        return endpointIDsConnected;
+    }
+
+    public void setNearbyAccessObject(NearbyAccessObject nearbyAccessObject) {
+        this.nearbyAccessObject = nearbyAccessObject;
     }
 }

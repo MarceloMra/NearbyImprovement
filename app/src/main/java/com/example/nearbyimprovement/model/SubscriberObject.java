@@ -17,6 +17,26 @@ public class SubscriberObject extends PatternComunicationObject implements Recei
     }
 
     @Override
+    public void onSuccessStartAdvertising() {
+
+    }
+
+    @Override
+    public void onFeilureStartAdvertising(Exception e) {
+
+    }
+
+    @Override
+    public void onSuccessStartDiscovery() {
+
+    }
+
+    @Override
+    public void onFeilureStartDiscovery(Exception e) {
+
+    }
+
+    @Override
     public void receive(Payload p) {
 
     }

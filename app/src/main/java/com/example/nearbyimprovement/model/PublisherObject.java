@@ -15,6 +15,26 @@ public class PublisherObject extends PatternComunicationObject implements Sender
     }
 
     @Override
+    public void onSuccessStartAdvertising() {
+
+    }
+
+    @Override
+    public void onFeilureStartAdvertising(Exception e) {
+
+    }
+
+    @Override
+    public void onSuccessStartDiscovery() {
+
+    }
+
+    @Override
+    public void onFeilureStartDiscovery(Exception e) {
+
+    }
+
+    @Override
     public void send(byte[] dados, String endPointID) {
 
     }

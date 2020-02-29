@@ -162,8 +162,9 @@ public class NearbyAccessObject {
         }
     };
 
-    public NearbyAccessObject(PatternComunicationObject patternComunicationObject) {
+    public NearbyAccessObject(PatternComunicationObject patternComunicationObject, String nickname) {
         SERVICE_ID = GlobalApplication.getContext().getString(R.string.service_id);
+        this.nickname = nickname;
 
         if(patternComunicationObject != null){
             if(patternComunicationObject instanceof SubscriberObject){
@@ -199,7 +200,7 @@ public class NearbyAccessObject {
                             @Override
                             public void onSuccess(Void unusedResult) {
                                 //Notifying the receivers
-
+                                patternComunicationObject.onSuccessStartAdvertising();
                             }
                         })
                 .addOnFailureListener(
@@ -207,7 +208,7 @@ public class NearbyAccessObject {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 //Notifying the receivers
-
+                                patternComunicationObject.onFeilureStartAdvertising(e);
                             }
                         });
     }
@@ -220,14 +221,14 @@ public class NearbyAccessObject {
                         new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unusedResult) {
-
+                                patternComunicationObject.onSuccessStartDiscovery();
                             }
                         })
                 .addOnFailureListener(
                         new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-
+                                patternComunicationObject.onFeilureStartDiscovery(e);
                             }
                         });
     }

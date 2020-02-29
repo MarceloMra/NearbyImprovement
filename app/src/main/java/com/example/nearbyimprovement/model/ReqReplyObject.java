@@ -25,4 +25,24 @@ public class ReqReplyObject extends PatternComunicationObject implements Receive
     protected void novaConexaoEfetuada(String endpointID) {
 
     }
+
+    @Override
+    public void onSuccessStartAdvertising() {
+
+    }
+
+    @Override
+    public void onFeilureStartAdvertising(Exception e) {
+
+    }
+
+    @Override
+    public void onSuccessStartDiscovery() {
+
+    }
+
+    @Override
+    public void onFeilureStartDiscovery(Exception e) {
+
+    }
 }
