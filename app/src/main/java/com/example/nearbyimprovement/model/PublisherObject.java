@@ -10,6 +10,11 @@ public class PublisherObject extends PatternComunicationObject implements Sender
     }
 
     @Override
+    protected void novaConexaoEfetuada(String endpointID) {
+
+    }
+
+    @Override
     public void send(byte[] dados, String endPointID) {
 
     }

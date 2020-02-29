@@ -12,12 +12,17 @@ public class ReqReplyObject extends PatternComunicationObject implements Receive
     }
 
     @Override
-    public Payload receive() {
-        return null;
+    public void receive(Payload p) {
+
     }
 
     @Override
     public void send(byte[] dados, String endPointID) {
+
+    }
+
+    @Override
+    protected void novaConexaoEfetuada(String endpointID) {
 
     }
 }

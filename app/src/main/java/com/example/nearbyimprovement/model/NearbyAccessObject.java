@@ -20,6 +20,8 @@ import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.nio.charset.StandardCharsets;
+
 public class NearbyAccessObject {
     private final String SERVICE_ID;
     private PatternComunicationObject patternComunicationObject;
@@ -54,12 +56,65 @@ public class NearbyAccessObject {
         }
     }
 
+    private void fecharConexao(String endpointID){
+        com.google.android.gms.nearby.Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).disconnectFromEndpoint(endpointID);
+    }
+
+    private void adicionarNovoEndpointID(String endpointID){
+        patternComunicationObject.addNewEndpointID(endpointID);
+    }
+
     private final PayloadCallback mPayloadCallback = new PayloadCallback() {
         @Override
         public void onPayloadReceived(String endPointId, Payload payload) {
-            //new String(payload.asBytes(), StandardCharsets.UTF_8)
-            //Notifying the receivers
-
+            String recv = new String(payload.asBytes(), StandardCharsets.UTF_8);
+            switch (recv){
+                case "-@-pub-@-":
+                    if(patternComunicationObject.getComportamento() != Comportamento.SUBSCRIBER){
+                        //fecha a conexão por incompatibilidade dos comportamentos
+                        fecharConexao(endPointId);
+                    }else{
+                        //notifica ao patternObject o endpointID do novo dispositivo conectado
+                        adicionarNovoEndpointID(endPointId);
+                    }
+                    break;
+                case "-@-sub-@-":
+                    if(patternComunicationObject.getComportamento() != Comportamento.PUBLISHER){
+                        //fecha a conexão por incompatibilidade dos comportamentos
+                        fecharConexao(endPointId);
+                    }else{
+                        //notifica ao patternObject o endpointID do novo dispositivo conectado
+                        adicionarNovoEndpointID(endPointId);
+                    }
+                    break;
+                case "-@-req-@-":
+                    if(patternComunicationObject.getComportamento() != Comportamento.REPLYER){
+                        //fecha a conexão por incompatibilidade dos comportamentos
+                        fecharConexao(endPointId);
+                    }else{
+                        //notifica ao patternObject o endpointID do novo dispositivo conectado
+                        adicionarNovoEndpointID(endPointId);
+                    }
+                    break;
+                case "-@-rep-@-":
+                    if(patternComunicationObject.getComportamento() != Comportamento.REQUESTER){
+                        //fecha a conexão por incompatibilidade dos comportamentos
+                        fecharConexao(endPointId);
+                    }else{
+                        //notifica ao patternObject o endpointID do novo dispositivo conectado
+                        adicionarNovoEndpointID(endPointId);
+                    }
+                    break;
+                default:
+                    //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
+                    if(patternComunicationObject instanceof SubscriberObject){
+                        SubscriberObject so = (SubscriberObject) patternComunicationObject;
+                        so.receive(payload);
+                    }else if(patternComunicationObject instanceof ReqReplyObject){
+                        ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
+                        rro.receive(payload);
+                    }
+            }
 
         }
 
@@ -104,8 +159,7 @@ public class NearbyAccessObject {
     private final ConnectionLifecycleCallback mConnectionLifecycleCallback = new ConnectionLifecycleCallback() {
         @Override
         public void onConnectionInitiated(final String endpointId, ConnectionInfo connectionInfo) {
-            //Notifying the receivers
-
+            com.google.android.gms.nearby.Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).acceptConnection(endpointId, mPayloadCallback);
         }
 
         @Override
@@ -113,6 +167,20 @@ public class NearbyAccessObject {
 
             switch (result.getStatus().getStatusCode()) {
                 case ConnectionsStatusCodes.STATUS_OK:
+
+                    String comp = "";
+                    switch (patternComunicationObject.getComportamento()){
+                        case REQUESTER: comp = "-@-req-@-";
+                            break;
+                        case SUBSCRIBER: comp = "-@-sub-@-";
+                            break;
+                        case PUBLISHER: comp = "-@-pub-@-";
+                            break;
+                        case REPLYER: comp = "-@-rep-@-";
+                            break;
+                    }
+                    Payload p = Payload.fromBytes(comp.getBytes());
+                    Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).sendPayload(endpointId, p);
 
                     break;
                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
@@ -126,7 +194,7 @@ public class NearbyAccessObject {
 
         @Override
         public void onDisconnected(String endpointId) {
-
+            patternComunicationObject.removeEndpointID(endpointId);
         }
     };
 

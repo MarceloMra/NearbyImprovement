@@ -12,8 +12,13 @@ public class SubscriberObject extends PatternComunicationObject implements Recei
     }
 
     @Override
-    public Payload receive() {
-        return null;
+    protected void novaConexaoEfetuada(String endpointID) {
+
+    }
+
+    @Override
+    public void receive(Payload p) {
+
     }
 
 }
