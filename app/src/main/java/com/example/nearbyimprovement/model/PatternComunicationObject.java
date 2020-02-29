@@ -34,6 +34,7 @@ public abstract class PatternComunicationObject {
 
     public void addNewEndpointID(String endpointID){
         endpointIDsConnected.add(endpointID);
+        novaConexaoEfetuada(endpointID);
     }
 
     protected abstract void novaConexaoEfetuada(String endpointID);
