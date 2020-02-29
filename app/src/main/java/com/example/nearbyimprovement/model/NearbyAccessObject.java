@@ -71,10 +71,10 @@ public class NearbyAccessObject {
                     break;
                 default:
                     //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
-                    if(patternComunicationObject instanceof SubscriberObject){
+                    if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
                         SubscriberObject so = (SubscriberObject) patternComunicationObject;
                         so.receive(payload.asBytes(), endPointId);
-                    }else if(patternComunicationObject instanceof ReqReplyObject){
+                    }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
                         ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
                         rro.receive(payload.asBytes(), endPointId);
                     }
@@ -167,16 +167,14 @@ public class NearbyAccessObject {
         this.nickname = nickname;
 
         if(patternComunicationObject != null){
-            if(patternComunicationObject instanceof SubscriberObject){
+            if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
                 strategy = Strategy.P2P_POINT_TO_POINT;
-            }else if(patternComunicationObject instanceof PublisherObject){
+            }else if(patternComunicationObject.getComportamento() == Comportamento.PUBLISHER){
                 strategy = Strategy.P2P_STAR;
-            }else if(patternComunicationObject instanceof ReqReplyObject){
-                if(patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
-                    strategy = Strategy.P2P_POINT_TO_POINT;
-                }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER){
-                    strategy = Strategy.P2P_STAR;
-                }
+            }else if(patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
+                strategy = Strategy.P2P_POINT_TO_POINT;
+            }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER){
+                strategy = Strategy.P2P_STAR;
             }
 
             this.patternComunicationObject = patternComunicationObject;
