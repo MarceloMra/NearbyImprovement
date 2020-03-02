@@ -220,7 +220,13 @@ public class NearbyAccessObject {
     }
 
     public void send(String endpointID, byte[] dados){
-        Payload p = Payload.fromBytes(dados);
+        Pacote pac = new Pacote(TipoPacote.CONTENT, dados);
+        Payload p = null;
+        try {
+            p = Payload.fromBytes(serialize(pac));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).sendPayload(endpointID, p);
     }
 
