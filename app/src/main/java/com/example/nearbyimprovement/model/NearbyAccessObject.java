@@ -83,6 +83,38 @@ public class NearbyAccessObject {
                             adicionarNovoEndpointID(endPointId);
                         }
                         break;
+                    case "-@-subscribe-@-":
+                        if(patternComunicationObject.getComportamento() != Comportamento.PUBLISHER){
+                            //fecha a conexão por incompatibilidade dos comportamentos ou retornar uma mensagem de controle
+                            comunicacaoSubscricao(endPointId, "-@-Failsubscribe-@-");
+                            fecharConexao(endPointId);
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            PublisherObject po = (PublisherObject) patternComunicationObject;
+                            po.addNovaSubscricao(endPointId);
+                            comunicacaoSubscricao(endPointId, "-@-OKsubscribe-@-");
+                        }
+                        break;
+                    case "-@-OKsubscribe-@-":
+                        if(patternComunicationObject.getComportamento() != Comportamento.SUBSCRIBER){
+                            //fecha a conexão por incompatibilidade dos comportamentos ou retornar uma mensagem de controle
+                            fecharConexao(endPointId);
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            SubscriberObject so = (SubscriberObject) patternComunicationObject;
+                            so.onOkSubscription(endPointId);
+                        }
+                        break;
+                    case "-@-Failsubscribe-@-":
+                        if(patternComunicationObject.getComportamento() != Comportamento.SUBSCRIBER){
+                            //fecha a conexão por incompatibilidade dos comportamentos ou retornar uma mensagem de controle
+                            fecharConexao(endPointId);
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            SubscriberObject so = (SubscriberObject) patternComunicationObject;
+                            so.onFailSubscription(endPointId);
+                        }
+                        break;
                 }
             }else if(pacote.getTipo() == TipoPacote.CONTENT){
                 //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
@@ -221,6 +253,17 @@ public class NearbyAccessObject {
 
     public void send(String endpointID, byte[] dados){
         Pacote pac = new Pacote(TipoPacote.CONTENT, dados);
+        Payload p = null;
+        try {
+            p = Payload.fromBytes(serialize(pac));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).sendPayload(endpointID, p);
+    }
+
+    public void comunicacaoSubscricao(String endpointID, String dadoControle){
+        Pacote pac = new Pacote(TipoPacote.CONTROL, dadoControle);
         Payload p = null;
         try {
             p = Payload.fromBytes(serialize(pac));

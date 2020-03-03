@@ -37,6 +37,10 @@ public abstract class PatternComunicationObject {
 
     public void removeEndpointID(String endpointID){
         endpointIDsConnected.remove(endpointID);
+        if(comportamento == Comportamento.PUBLISHER){
+            PublisherObject po = (PublisherObject) this;
+            po.removeSubscricao(endpointID);
+        }
     }
 
     public ArrayList<String> getEndpointIDsConnected() {

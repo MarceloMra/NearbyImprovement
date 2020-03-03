@@ -10,6 +10,19 @@ public class SubscriberObject extends PatternComunicationObject implements Recei
         super.comportamento = Comportamento.SUBSCRIBER;
     }
 
+    public void subscrever(String endpointID){
+        nearbyAccessObject.comunicacaoSubscricao(endpointID, "-@-subscribe-@-");
+    }
+
+
+    public void onOkSubscription(String endpointID){
+
+    }
+
+    public void onFailSubscription(String endpointID){
+
+    }
+
     @Override
     protected void novaConexaoEfetuada(String endpointID) {
 
