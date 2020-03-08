@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="comportamentos">
+        <item>Publisher</item>
+        <item>Subscriber</item>
+        <item>Requester</item>
+        <item>Replyer</item>
+    </string-array>
+</resources>
