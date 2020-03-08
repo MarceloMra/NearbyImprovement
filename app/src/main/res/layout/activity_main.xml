@@ -37,22 +37,31 @@
         <Spinner
             android:id="@+id/spinComportamento"
             android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnConfirmarComportamento"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/confirmar_comportamento"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"/>
 
-        <Button
-            android:id="@+id/btnConfirmarComportamento"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="@string/confirmar_comportamento"
-            android:layout_marginBottom="8dp"/>
+            <Button
+                android:id="@+id/btnIniciarDescobAnuncio"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/iniciar_descoberta_e_an_ncio"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnIniciarDescobAnuncio"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="@string/iniciar_descoberta_e_an_ncio"
-            android:layout_marginBottom="8dp"/>
+
 
         <TextView
             android:id="@+id/lblEnviarPara"
@@ -61,18 +70,27 @@
             android:text="@string/enviar_para"
             android:gravity="start" />
 
-        <Spinner
-            android:id="@+id/spinIdsConnected"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnSubscreverServico"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="@string/subscrever_servi_o"
-            android:layout_marginBottom="8dp"/>
+            <Spinner
+                android:id="@+id/spinIdsConnected"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btnSubscreverServico"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:text="@string/subscrever_servi_o"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMensagens"
