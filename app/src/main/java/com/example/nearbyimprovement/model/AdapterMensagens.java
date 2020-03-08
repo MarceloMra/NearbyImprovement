@@ -26,6 +26,8 @@ public class AdapterMensagens extends RecyclerView.Adapter<AdapterMensagens.View
     public void onBindViewHolder(ViewHolderMensagens holder, int position) {
         holder.txtHora.setText(mensagens.get(position).getHora());
         holder.txtMensagem.setText(mensagens.get(position).getMensagem());
+        holder.txtModo.setText(mensagens.get(position).getMensagem());
+        holder.txtEndpointID.setText(mensagens.get(position).getMensagem());
     }
 
     @Override
@@ -37,12 +39,16 @@ public class AdapterMensagens extends RecyclerView.Adapter<AdapterMensagens.View
     public class ViewHolderMensagens extends RecyclerView.ViewHolder {
         TextView txtMensagem;
         TextView txtHora;
+        TextView txtModo;
+        TextView txtEndpointID;
         RelativeLayout itemmsgLayout;
 
         public ViewHolderMensagens(View itemView) {
             super(itemView);
             txtMensagem = (TextView)itemView.findViewById(R.id.mensagem);
             txtHora = (TextView)itemView.findViewById(R.id.hora);
+            txtModo = (TextView)itemView.findViewById(R.id.modo);
+            txtEndpointID = (TextView)itemView.findViewById(R.id.endpointID);
             itemmsgLayout = (RelativeLayout)itemView.findViewById(R.id.itemmsg);
         }
 
@@ -52,6 +58,14 @@ public class AdapterMensagens extends RecyclerView.Adapter<AdapterMensagens.View
 
         public TextView getTxtHora() {
             return txtHora;
+        }
+
+        public TextView getTxtModo() {
+            return txtModo;
+        }
+
+        public TextView getTxtEndpointID() {
+            return txtEndpointID;
         }
     }
 

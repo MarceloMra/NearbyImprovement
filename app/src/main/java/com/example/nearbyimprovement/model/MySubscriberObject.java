@@ -36,7 +36,7 @@ public class MySubscriberObject extends SubscriberObject {
 
     @Override
     public void receive(byte[] dados, String endpointID) {
-        mainActivity.addNovaMensagem(new String(dados, StandardCharsets.UTF_8));
+        mainActivity.addNovaMensagem(new String(dados, StandardCharsets.UTF_8), endpointID, "Recebido");
     }
 
     @Override

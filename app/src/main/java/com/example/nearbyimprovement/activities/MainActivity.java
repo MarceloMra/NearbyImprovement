@@ -99,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
                             mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
                         }
                     }
+                    addNovaMensagem(txtMensagem.getText().toString(), (String) spinIdsConnected.getSelectedItem(), "Enviado");
+                    txtMensagem.setText("");
+
+                    mostrarMensagemDeControleEmTela("Conteúdo enviado!");
                 }
             }
         });
@@ -162,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
         arrayAdapter.notifyDataSetChanged();
     }
 
-    public void addNovaMensagem(String s){
-        mensagens.add(new Mensagem(s));
+    public void addNovaMensagem(String s, String endpointID, String modo){
+        mensagens.add(new Mensagem(s, modo, endpointID));
         adapt.notifyDataSetChanged();
     }
 }
