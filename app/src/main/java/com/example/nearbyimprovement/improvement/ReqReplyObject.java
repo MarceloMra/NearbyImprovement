@@ -26,6 +26,11 @@ public class ReqReplyObject extends PatternComunicationObject implements Receive
     }
 
     @Override
+    protected void conexaoEncerrada(String endpointID) {
+
+    }
+
+    @Override
     public void onSuccessStartAdvertising() {
 
     }

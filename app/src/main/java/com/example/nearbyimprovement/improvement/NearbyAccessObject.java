@@ -220,6 +220,7 @@ public class NearbyAccessObject {
         @Override
         public void onDisconnected(String endpointId) {
             patternComunicationObject.removeEndpointID(endpointId);
+            patternComunicationObject.conexaoEncerrada(endpointId);
         }
     };
 

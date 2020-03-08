@@ -30,6 +30,11 @@ public class PublisherObject extends PatternComunicationObject implements Sender
     }
 
     @Override
+    protected void conexaoEncerrada(String endpointID) {
+
+    }
+
+    @Override
     public void onSuccessStartAdvertising() {
 
     }

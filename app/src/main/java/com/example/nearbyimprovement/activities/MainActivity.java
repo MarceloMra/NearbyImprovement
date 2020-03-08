@@ -92,8 +92,12 @@ public class MainActivity extends AppCompatActivity {
                         MyPublisherObject mpo = (MyPublisherObject) patternComunicationObject;
                         mpo.send(txtMensagem.getText().toString().getBytes(), null);
                     }else if(patternComunicationObject instanceof MyReqReplyObject){
-                        MyReqReplyObject mro = (MyReqReplyObject) patternComunicationObject;
-                        mro.send(txtMensagem.getText().toString().getBytes(), (String) spinIdsConnected.getSelectedItem());
+                        if(spinIdsConnected.getSelectedItem() != null) {
+                            MyReqReplyObject mro = (MyReqReplyObject) patternComunicationObject;
+                            mro.send(txtMensagem.getText().toString().getBytes(), (String) spinIdsConnected.getSelectedItem());
+                        }else{
+                            mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
+                        }
                     }
                 }
             }
@@ -102,8 +106,12 @@ public class MainActivity extends AppCompatActivity {
         btnSubscreverServico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MySubscriberObject mso = (MySubscriberObject) patternComunicationObject;
-                mso.subscrever((String) spinIdsConnected.getSelectedItem());
+                if(spinIdsConnected.getSelectedItem() != null) {
+                    MySubscriberObject mso = (MySubscriberObject) patternComunicationObject;
+                    mso.subscrever((String) spinIdsConnected.getSelectedItem());
+                }else{
+                    mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
+                }
             }
         });
     }
@@ -144,28 +152,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onSuccessStartAdvertising(){
-        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Anunciamento iniciado!", Toast.LENGTH_LONG).show();
+    public void mostrarMensagemDeControleEmTela(String s){
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
-    public void onSuccessStartDiscovery(){
-        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Descoberta iniciada!", Toast.LENGTH_LONG).show();
-    }
-
-    public void onFeilureStartDiscovery(Exception e){
-        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Erro ao iniciar Descoberta: "+e.getMessage(), Toast.LENGTH_LONG).show();
-    }
-
-    public void onFeilureStartAdvertising(Exception e){
-        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Erro ao iniciar Anunciamento: "+e.getMessage(), Toast.LENGTH_LONG).show();
-    }
-
-    public void onOkSubscription(String endpointID){
-        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Subscrição realizada com sucesso para "+endpointID, Toast.LENGTH_LONG).show();
-    }
-
-    public void onFailSubscription(String endpointID){
-        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Falha ao tentar subscrever o serviço de "+endpointID, Toast.LENGTH_LONG).show();
+    public void atualizarSpinIDsConectados(){
+        arrayAdapter.notifyDataSetChanged();
     }
 
     public void addNovaMensagem(String s){

@@ -29,6 +29,11 @@ public class SubscriberObject extends PatternComunicationObject implements Recei
     }
 
     @Override
+    protected void conexaoEncerrada(String endpointID) {
+
+    }
+
+    @Override
     public void onSuccessStartAdvertising() {
 
     }

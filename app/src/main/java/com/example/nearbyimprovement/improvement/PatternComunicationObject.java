@@ -30,6 +30,7 @@ public abstract class PatternComunicationObject {
     }
 
     protected abstract void novaConexaoEfetuada(String endpointID);
+    protected abstract void conexaoEncerrada(String endpointID);
     public abstract void onSuccessStartAdvertising();
     public abstract void onFeilureStartAdvertising(Exception e);
     public abstract void onSuccessStartDiscovery();
