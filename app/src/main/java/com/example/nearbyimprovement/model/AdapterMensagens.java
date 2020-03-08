@@ -26,8 +26,8 @@ public class AdapterMensagens extends RecyclerView.Adapter<AdapterMensagens.View
     public void onBindViewHolder(ViewHolderMensagens holder, int position) {
         holder.txtHora.setText(mensagens.get(position).getHora());
         holder.txtMensagem.setText(mensagens.get(position).getMensagem());
-        holder.txtModo.setText(mensagens.get(position).getMensagem());
-        holder.txtEndpointID.setText(mensagens.get(position).getMensagem());
+        holder.txtModo.setText(mensagens.get(position).getModo());
+        holder.txtEndpointID.setText(mensagens.get(position).getEndpointID());
     }
 
     @Override
