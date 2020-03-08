@@ -138,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
             patternComunicationObject.setNearbyAccessObject(nearbyAccessObject);
             if(arrayAdapter == null){
                 arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, patternComunicationObject.getEndpointIDsConnected());
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinIdsConnected.setAdapter(arrayAdapter);
             }
             btnIniciarAnuncDesc.setEnabled(true);
             btnConfirmComport.setEnabled(false);

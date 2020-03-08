@@ -26,6 +26,7 @@ public class MySubscriberObject extends SubscriberObject {
     @Override
     protected void novaConexaoEfetuada(String endpointID) {
         mainActivity.liberarCamposEnvio();
+        mainActivity.atualizarSpinIDsConectados();
     }
 
     @Override

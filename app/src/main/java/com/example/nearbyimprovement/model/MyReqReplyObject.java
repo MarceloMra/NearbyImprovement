@@ -22,6 +22,7 @@ public class MyReqReplyObject extends ReqReplyObject {
     @Override
     protected void novaConexaoEfetuada(String endpointID) {
         mainActivity.liberarCamposEnvio();
+        mainActivity.atualizarSpinIDsConectados();
     }
 
     @Override

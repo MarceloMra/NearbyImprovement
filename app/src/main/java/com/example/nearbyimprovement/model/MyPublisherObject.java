@@ -14,6 +14,7 @@ public class MyPublisherObject extends PublisherObject {
     @Override
     protected void novaConexaoEfetuada(String endpointID) {
         mainActivity.liberarCamposEnvio();
+        mainActivity.atualizarSpinIDsConectados();
     }
 
     @Override
