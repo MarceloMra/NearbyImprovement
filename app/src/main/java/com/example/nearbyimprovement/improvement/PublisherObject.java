@@ -1,4 +1,4 @@
-package com.example.nearbyimprovement.model;
+package com.example.nearbyimprovement.improvement;
 
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.interfaces.Sender;
@@ -9,6 +9,7 @@ public class PublisherObject extends PatternComunicationObject implements Sender
     private ArrayList<String> endpointIDsSubscribed;
 
     public PublisherObject() {
+        super();
         super.comportamento = Comportamento.PUBLISHER;
         endpointIDsSubscribed = new ArrayList<>();
     }

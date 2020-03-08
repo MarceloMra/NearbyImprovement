@@ -6,4 +6,5 @@
     <string name="confirmar_comportamento">Confirmar Comportamento</string>
     <string name="iniciar_descoberta_e_an_ncio">Iniciar descoberta e anúncio</string>
     <string name="enviar">Enviar</string>
+    <string name="enviar_para">Enviar Para:</string>
 </resources>

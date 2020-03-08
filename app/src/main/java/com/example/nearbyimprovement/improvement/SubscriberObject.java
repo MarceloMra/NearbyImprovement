@@ -1,4 +1,4 @@
-package com.example.nearbyimprovement.model;
+package com.example.nearbyimprovement.improvement;
 
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.interfaces.Receiver;

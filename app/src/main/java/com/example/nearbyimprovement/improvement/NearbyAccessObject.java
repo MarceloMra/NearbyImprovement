@@ -1,10 +1,11 @@
-package com.example.nearbyimprovement.model;
+package com.example.nearbyimprovement.improvement;
 
 import androidx.annotation.NonNull;
 
 import com.example.nearbyimprovement.R;
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.enums.TipoPacote;
+import com.example.nearbyimprovement.model.GlobalApplication;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
@@ -120,10 +121,18 @@ public class NearbyAccessObject {
                 //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
                 if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
                     SubscriberObject so = (SubscriberObject) patternComunicationObject;
-                    so.receive(payload.asBytes(), endPointId);
+                    try {
+                        so.receive(serialize(pacote.getConteudo()), endPointId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
                     ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
-                    rro.receive(payload.asBytes(), endPointId);
+                    try {
+                        rro.receive(serialize(pacote.getConteudo()), endPointId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
