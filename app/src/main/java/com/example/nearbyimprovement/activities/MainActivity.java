@@ -120,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
         if(!txtNickName.getText().equals("")){
             if (spinComportamento.getSelectedItemId() == 0){
                 patternComunicationObject = new MyPublisherObject(this);
+                txtMensagem.setEnabled(true);
+                btnEnviar.setEnabled(true);
             }else if (spinComportamento.getSelectedItemId() == 1){
                 patternComunicationObject = new MySubscriberObject(this);
             }else if (spinComportamento.getSelectedItemId() == 2){
