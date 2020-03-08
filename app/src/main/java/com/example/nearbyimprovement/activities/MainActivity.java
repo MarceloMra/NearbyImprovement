@@ -6,6 +6,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +25,7 @@ import com.example.nearbyimprovement.model.MySubscriberObject;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnConfirmComport, btnIniciarAnuncDesc, btnEnviar;
+    private Button btnConfirmComport, btnIniciarAnuncDesc, btnEnviar, btnSubscreverServico;
     private EditText txtNickName, txtMensagem;
     private Spinner spinComportamento, spinIdsConnected;
     private RecyclerView rvMensagens;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         btnConfirmComport = (Button) findViewById(R.id.btnConfirmarComportamento);
         btnEnviar = (Button) findViewById(R.id.btnEnviar);
         btnIniciarAnuncDesc = (Button) findViewById(R.id.btnIniciarDescobAnuncio);
+        btnSubscreverServico = (Button) findViewById(R.id.btnSubscreverServico);
         txtMensagem = (EditText) findViewById(R.id.txtMensagem);
         txtNickName = (EditText) findViewById(R.id.txtNickName);
         spinComportamento = (Spinner) findViewById(R.id.spinComportamento);
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnIniciarAnuncDesc.setEnabled(false);
         btnEnviar.setEnabled(false);
+        btnSubscreverServico.setEnabled(false);
         txtMensagem.setEnabled(false);
 
         btnConfirmComport.setOnClickListener(new View.OnClickListener() {
@@ -89,30 +93,43 @@ public class MainActivity extends AppCompatActivity {
                         mpo.send(txtMensagem.getText().toString().getBytes(), null);
                     }else if(patternComunicationObject instanceof MyReqReplyObject){
                         MyReqReplyObject mro = (MyReqReplyObject) patternComunicationObject;
-                        //ENVIANDO SEMPRE PARA O PRIMEIRO, PORÉM PODE ACEITAR QUALQUER ENDPOINTID QUE ESTEJA CONECTADO
-                        mro.send(txtMensagem.getText().toString().getBytes(), patternComunicationObject.getEndpointIDsConnected().get(0));
+                        mro.send(txtMensagem.getText().toString().getBytes(), (String) spinIdsConnected.getSelectedItem());
                     }
                 }
+            }
+        });
+
+        btnSubscreverServico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MySubscriberObject mso = (MySubscriberObject) patternComunicationObject;
+                mso.subscrever((String) spinIdsConnected.getSelectedItem());
             }
         });
     }
 
     private void inicializarObjetosDeComunicacao(){
         if(!txtNickName.getText().equals("")){
-            if (spinComportamento.getSelectedItem() == 0){
+            if (spinComportamento.getSelectedItemId() == 0){
                 patternComunicationObject = new MyPublisherObject(this);
-            }else if (spinComportamento.getSelectedItem() == 1){
+            }else if (spinComportamento.getSelectedItemId() == 1){
                 patternComunicationObject = new MySubscriberObject(this);
-            }else if (spinComportamento.getSelectedItem() == 2){
+            }else if (spinComportamento.getSelectedItemId() == 2){
                 patternComunicationObject = new MyReqReplyObject(Comportamento.REQUESTER, this);
-            }else if (spinComportamento.getSelectedItem() == 3){
+            }else if (spinComportamento.getSelectedItemId() == 3){
                 patternComunicationObject = new MyReqReplyObject(Comportamento.REPLYER, this);
             }
 
             nearbyAccessObject = new NearbyAccessObject(patternComunicationObject, txtNickName.getText().toString());
+            patternComunicationObject.setNearbyAccessObject(nearbyAccessObject);
             if(arrayAdapter == null){
                 arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, patternComunicationObject.getEndpointIDsConnected());
             }
+            btnIniciarAnuncDesc.setEnabled(true);
+            btnConfirmComport.setEnabled(false);
+            spinComportamento.setEnabled(false);
+            txtNickName.setEnabled(false);
+            Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "NickName e Comportamento confirmados! O dispositivo está pronto para se conectar a outros dispositivos.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -121,7 +138,34 @@ public class MainActivity extends AppCompatActivity {
             txtMensagem.setEnabled(true);
             btnEnviar.setEnabled(true);
             arrayAdapter.notifyDataSetChanged();
+            if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
+                btnSubscreverServico.setEnabled(true);
+            }
         }
+    }
+
+    public void onSuccessStartAdvertising(){
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Anunciamento iniciado!", Toast.LENGTH_LONG).show();
+    }
+
+    public void onSuccessStartDiscovery(){
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Descoberta iniciada!", Toast.LENGTH_LONG).show();
+    }
+
+    public void onFeilureStartDiscovery(Exception e){
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Erro ao iniciar Descoberta: "+e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    public void onFeilureStartAdvertising(Exception e){
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Erro ao iniciar Anunciamento: "+e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    public void onOkSubscription(String endpointID){
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Subscrição realizada com sucesso para "+endpointID, Toast.LENGTH_LONG).show();
+    }
+
+    public void onFailSubscription(String endpointID){
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Falha ao tentar subscrever o serviço de "+endpointID, Toast.LENGTH_LONG).show();
     }
 
     public void addNovaMensagem(String s){

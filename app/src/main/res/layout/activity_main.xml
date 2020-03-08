@@ -67,6 +67,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"/>
 
+        <Button
+            android:id="@+id/btnSubscreverServico"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:text="@string/subscrever_servi_o"
+            android:layout_marginBottom="8dp"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMensagens"
             android:layout_width="match_parent"
