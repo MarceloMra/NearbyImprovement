@@ -15,7 +15,9 @@ public class PublisherObject extends PatternComunicationObject implements Sender
     }
 
     public void addNovaSubscricao(String endpointID){
-        endpointIDsSubscribed.add(endpointID);
+        if(!endpointIDsSubscribed.contains(endpointID)){
+            endpointIDsSubscribed.add(endpointID);
+        }
     }
 
     public void removeSubscricao(String endpointID){

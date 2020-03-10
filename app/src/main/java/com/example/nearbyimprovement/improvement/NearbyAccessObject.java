@@ -1,5 +1,7 @@
 package com.example.nearbyimprovement.improvement;
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.example.nearbyimprovement.R;
@@ -22,11 +24,7 @@ import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 public class NearbyAccessObject {
     private final String SERVICE_ID;
@@ -37,9 +35,10 @@ public class NearbyAccessObject {
     private final PayloadCallback mPayloadCallback = new PayloadCallback() {
         @Override
         public void onPayloadReceived(String endPointId, Payload payload) {
+            Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Payload recebido! ", Toast.LENGTH_LONG).show();
             Pacote pacote = null;
             try {
-                pacote = (Pacote) deserialize(payload.asBytes());
+                pacote = (Pacote) Services.deserialize(payload.asBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -122,14 +121,14 @@ public class NearbyAccessObject {
                 if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
                     SubscriberObject so = (SubscriberObject) patternComunicationObject;
                     try {
-                        so.receive(serialize(pacote.getConteudo()), endPointId);
+                        so.receive(Services.serialize(pacote.getConteudo()), endPointId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
                     ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
                     try {
-                        rro.receive(serialize(pacote.getConteudo()), endPointId);
+                        rro.receive(Services.serialize(pacote.getConteudo()), endPointId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -155,7 +154,7 @@ public class NearbyAccessObject {
                             new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unusedResult) {
-
+                                    Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Endpoint encontrado! ", Toast.LENGTH_LONG).show();
 
                                 }
                             })
@@ -163,7 +162,7 @@ public class NearbyAccessObject {
                             new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
+                                    Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Falha no endpoint encontrado! ", Toast.LENGTH_LONG).show();
 
                                 }
                             });
@@ -171,7 +170,7 @@ public class NearbyAccessObject {
 
         @Override
         public void onEndpointLost(String endpointId) {
-
+            Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Endpoint perdido! ", Toast.LENGTH_LONG).show();
         }
     };
 
@@ -179,6 +178,7 @@ public class NearbyAccessObject {
         @Override
         public void onConnectionInitiated(final String endpointId, ConnectionInfo connectionInfo) {
             com.google.android.gms.nearby.Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).acceptConnection(endpointId, mPayloadCallback);
+            Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Conexão aceita! ", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -201,18 +201,18 @@ public class NearbyAccessObject {
                     Pacote pac = new Pacote(TipoPacote.CONTROL, comp);
                     Payload p = null;
                     try {
-                        p = Payload.fromBytes(serialize(pac));
+                        p = Payload.fromBytes(Services.serialize(pac));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).sendPayload(endpointId, p);
-
+                    Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Endpoint conectado com sucesso! ", Toast.LENGTH_LONG).show();
                     break;
                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
-
+                    Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Conexão rejeitada! ", Toast.LENGTH_LONG).show();
                     break;
                 case ConnectionsStatusCodes.STATUS_ERROR:
-
+                    Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Erro após aceitar a conexão! ", Toast.LENGTH_LONG).show();
                     break;
             }
         }
@@ -221,14 +221,16 @@ public class NearbyAccessObject {
         public void onDisconnected(String endpointId) {
             patternComunicationObject.removeEndpointID(endpointId);
             patternComunicationObject.conexaoEncerrada(endpointId);
+            Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Endpoint desconectou-se! ", Toast.LENGTH_LONG).show();
         }
     };
 
     public NearbyAccessObject(PatternComunicationObject patternComunicationObject, String nickname) {
         SERVICE_ID = GlobalApplication.getContext().getString(R.string.service_id);
         this.nickname = nickname;
-
         if(patternComunicationObject != null){
+            strategy = Strategy.P2P_STAR;
+            /*
             switch (patternComunicationObject.getComportamento()) {
                 case SUBSCRIBER:
                     strategy = Strategy.P2P_POINT_TO_POINT;
@@ -243,29 +245,16 @@ public class NearbyAccessObject {
                     strategy = Strategy.P2P_STAR;
                     break;
             }
-
+            */
             this.patternComunicationObject = patternComunicationObject;
         }
-    }
-
-    private byte[] serialize(Object obj) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(obj);
-        return out.toByteArray();
-    }
-
-    private Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);
-        return is.readObject();
     }
 
     public void send(String endpointID, byte[] dados){
         Pacote pac = new Pacote(TipoPacote.CONTENT, dados);
         Payload p = null;
         try {
-            p = Payload.fromBytes(serialize(pac));
+            p = Payload.fromBytes(Services.serialize(pac));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -276,7 +265,7 @@ public class NearbyAccessObject {
         Pacote pac = new Pacote(TipoPacote.CONTROL, dadoControle);
         Payload p = null;
         try {
-            p = Payload.fromBytes(serialize(pac));
+            p = Payload.fromBytes(Services.serialize(pac));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -285,6 +274,7 @@ public class NearbyAccessObject {
 
     private void fecharConexao(String endpointID){
         com.google.android.gms.nearby.Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).disconnectFromEndpoint(endpointID);
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Comportamentos imcompatíveis, conexão encerrada!", Toast.LENGTH_LONG).show();
     }
 
     private void adicionarNovoEndpointID(String endpointID){

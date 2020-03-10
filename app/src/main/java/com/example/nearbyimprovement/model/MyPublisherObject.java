@@ -15,6 +15,7 @@ public class MyPublisherObject extends PublisherObject {
     protected void novaConexaoEfetuada(String endpointID) {
         mainActivity.liberarCamposEnvio();
         mainActivity.atualizarSpinIDsConectados();
+        mainActivity.mostrarMensagemDeControleEmTela("Nova conexão com "+endpointID+"!");
     }
 
     @Override

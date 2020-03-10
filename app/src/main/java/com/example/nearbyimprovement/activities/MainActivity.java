@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private Button btnConfirmComport, btnIniciarAnuncDesc, btnEnviar, btnSubscreverServico;
     private EditText txtNickName, txtMensagem;
-    private Spinner spinComportamento, spinIdsConnected;
+    private Spinner spinComportamento, spinIdsConnected, spinModo;
     private RecyclerView rvMensagens;
     private ArrayList<Mensagem> mensagens;
     private AdapterMensagens adapt;
@@ -50,11 +50,16 @@ public class MainActivity extends AppCompatActivity {
         txtNickName = (EditText) findViewById(R.id.txtNickName);
         spinComportamento = (Spinner) findViewById(R.id.spinComportamento);
         spinIdsConnected = (Spinner) findViewById(R.id.spinIdsConnected);
+        spinModo = (Spinner) findViewById(R.id.spinAnuncDesc);
         rvMensagens = (RecyclerView) findViewById(R.id.rvMensagens);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.comportamentos, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinComportamento.setAdapter(adapter);
+
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.modos, android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinModo.setAdapter(adapter2);
 
         adapt = new AdapterMensagens(mensagens);
         rvMensagens.setAdapter(adapt);
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         btnEnviar.setEnabled(false);
         btnSubscreverServico.setEnabled(false);
         txtMensagem.setEnabled(false);
+        spinModo.setEnabled(false);
 
         btnConfirmComport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +84,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (patternComunicationObject != null && nearbyAccessObject != null){
-                    patternComunicationObject.startAdvertising();
-                    patternComunicationObject.startDiscovery();
+                    if(spinModo.getSelectedItemId() == 0){
+                        patternComunicationObject.startAdvertising();
+                    }else{
+                        patternComunicationObject.startDiscovery();
+                    }
                 }
             }
         });
@@ -88,18 +97,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(patternComunicationObject instanceof MyPublisherObject || patternComunicationObject instanceof MyReqReplyObject){
+                    String endpointIDSelected = (String) spinIdsConnected.getSelectedItem();
                     if(patternComunicationObject instanceof MyPublisherObject){
                         MyPublisherObject mpo = (MyPublisherObject) patternComunicationObject;
                         mpo.send(txtMensagem.getText().toString().getBytes(), null);
+                        endpointIDSelected = "Broadcast";
                     }else if(patternComunicationObject instanceof MyReqReplyObject){
                         if(spinIdsConnected.getSelectedItem() != null) {
                             MyReqReplyObject mro = (MyReqReplyObject) patternComunicationObject;
-                            mro.send(txtMensagem.getText().toString().getBytes(), (String) spinIdsConnected.getSelectedItem());
+                            mro.send(txtMensagem.getText().toString().getBytes(), endpointIDSelected);
                         }else{
                             mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
                         }
                     }
-                    addNovaMensagem(txtMensagem.getText().toString(), (String) spinIdsConnected.getSelectedItem(), "Enviado");
+                    addNovaMensagem(txtMensagem.getText().toString(), endpointIDSelected, "Enviado");
                     txtMensagem.setText("");
 
                     mostrarMensagemDeControleEmTela("Conteúdo enviado!");
@@ -113,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 if(spinIdsConnected.getSelectedItem() != null) {
                     MySubscriberObject mso = (MySubscriberObject) patternComunicationObject;
                     mso.subscrever((String) spinIdsConnected.getSelectedItem());
+
                 }else{
                     mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
                 }
@@ -142,9 +154,11 @@ public class MainActivity extends AppCompatActivity {
                 spinIdsConnected.setAdapter(arrayAdapter);
             }
             btnIniciarAnuncDesc.setEnabled(true);
+            spinModo.setEnabled(true);
             btnConfirmComport.setEnabled(false);
             spinComportamento.setEnabled(false);
             txtNickName.setEnabled(false);
+
             Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "NickName e Comportamento confirmados! O dispositivo está pronto para se conectar a outros dispositivos.", Toast.LENGTH_LONG).show();
         }
     }
@@ -153,11 +167,13 @@ public class MainActivity extends AppCompatActivity {
         if(patternComunicationObject != null && (patternComunicationObject.getComportamento() == Comportamento.PUBLISHER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER || patternComunicationObject.getComportamento() == Comportamento.REPLYER )){
             txtMensagem.setEnabled(true);
             btnEnviar.setEnabled(true);
-            arrayAdapter.notifyDataSetChanged();
-            if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
-                btnSubscreverServico.setEnabled(true);
-            }
+
+
         }
+        if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
+            btnSubscreverServico.setEnabled(true);
+        }
+        arrayAdapter.notifyDataSetChanged();
     }
 
     public void mostrarMensagemDeControleEmTela(String s){

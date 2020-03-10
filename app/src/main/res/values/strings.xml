@@ -8,4 +8,5 @@
     <string name="enviar">Enviar</string>
     <string name="enviar_para">EndpointID Selecionado:</string>
     <string name="subscrever_servi_o">Subscrever serviço</string>
+    <string name="modo">Modo:</string>
 </resources>
