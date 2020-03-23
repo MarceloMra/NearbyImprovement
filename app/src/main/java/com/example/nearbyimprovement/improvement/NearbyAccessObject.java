@@ -190,12 +190,21 @@ public class NearbyAccessObject {
                     String comp = "";
                     switch (patternComunicationObject.getComportamento()){
                         case REQUESTER: comp = "-@-req-@-";
+                            if(verificarQuantidadeConexoes(endpointId, 1)){
+                                return;
+                            }
                             break;
                         case SUBSCRIBER: comp = "-@-sub-@-";
+                            if(verificarQuantidadeConexoes(endpointId, 1)){
+                                return;
+                            }
                             break;
                         case PUBLISHER: comp = "-@-pub-@-";
                             break;
                         case REPLYER: comp = "-@-rep-@-";
+                            if(verificarQuantidadeConexoes(endpointId, 1)){
+                                return;
+                            }
                             break;
                     }
                     Pacote pac = new Pacote(TipoPacote.CONTROL, comp);
@@ -225,13 +234,22 @@ public class NearbyAccessObject {
         }
     };
 
+    private boolean verificarQuantidadeConexoes(String endpointID, int qtdConexõesMaximas){
+        if(patternComunicationObject.getEndpointIDsConnected().size() > qtdConexõesMaximas){
+            fecharConexao(endpointID);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public NearbyAccessObject(PatternComunicationObject patternComunicationObject, String nickname) {
         SERVICE_ID = GlobalApplication.getContext().getString(R.string.service_id);
         this.nickname = nickname;
         if(patternComunicationObject != null){
             strategy = Strategy.P2P_STAR;
-            /*
-            switch (patternComunicationObject.getComportamento()) {
+
+            /*switch (patternComunicationObject.getComportamento()) {
                 case SUBSCRIBER:
                     strategy = Strategy.P2P_POINT_TO_POINT;
                     break;
@@ -244,8 +262,8 @@ public class NearbyAccessObject {
                 case REPLYER:
                     strategy = Strategy.P2P_STAR;
                     break;
-            }
-            */
+            }*/
+            Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "NearbyAccesObject instanciado com Strategy."+strategy.toString(), Toast.LENGTH_LONG).show();
             this.patternComunicationObject = patternComunicationObject;
         }
     }
@@ -274,7 +292,7 @@ public class NearbyAccessObject {
 
     private void fecharConexao(String endpointID){
         com.google.android.gms.nearby.Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).disconnectFromEndpoint(endpointID);
-        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Comportamentos imcompatíveis, conexão encerrada!", Toast.LENGTH_LONG).show();
+        Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Conexão encerrada!", Toast.LENGTH_LONG).show();
     }
 
     private void adicionarNovoEndpointID(String endpointID){
