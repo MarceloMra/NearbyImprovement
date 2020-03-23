@@ -120,18 +120,10 @@ public class NearbyAccessObject {
                 //REPASSAR O PAYLOAD RECEBIDO PARA O patternObject
                 if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
                     SubscriberObject so = (SubscriberObject) patternComunicationObject;
-                    try {
-                        so.receive(Services.serialize(pacote.getConteudo()), endPointId);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    so.receive((byte[]) pacote.getConteudo(), endPointId);
                 }else if(patternComunicationObject.getComportamento() == Comportamento.REPLYER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER){
                     ReqReplyObject rro = (ReqReplyObject) patternComunicationObject;
-                    try {
-                        rro.receive(Services.serialize(pacote.getConteudo()), endPointId);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    rro.receive((byte[]) pacote.getConteudo(), endPointId);
                 }
             }
         }

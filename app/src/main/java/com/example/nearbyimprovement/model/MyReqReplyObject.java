@@ -3,9 +3,7 @@ package com.example.nearbyimprovement.model;
 import com.example.nearbyimprovement.activities.MainActivity;
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.improvement.ReqReplyObject;
-import com.example.nearbyimprovement.improvement.Services;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class MyReqReplyObject extends ReqReplyObject {
@@ -18,13 +16,7 @@ public class MyReqReplyObject extends ReqReplyObject {
 
     @Override
     public void receive(byte[] dados, String endpointID) {
-        try {
-            mainActivity.addNovaMensagem(new String(((byte[]) (Services.deserialize(dados))), StandardCharsets.UTF_8), endpointID, "Recebido");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        mainActivity.addNovaMensagem(new String(dados, StandardCharsets.UTF_8), endpointID, "Recebido");
     }
 
     @Override
