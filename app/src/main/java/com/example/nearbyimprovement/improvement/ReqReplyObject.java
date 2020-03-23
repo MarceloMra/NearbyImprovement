@@ -4,7 +4,7 @@ import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.interfaces.Receiver;
 import com.example.nearbyimprovement.interfaces.Sender;
 
-public class ReqReplyObject extends PatternComunicationObject implements Receiver, Sender {
+public abstract class ReqReplyObject extends PatternComunicationObject implements Receiver, Sender {
 
     public ReqReplyObject(Comportamento c) {
         super.comportamento = c;

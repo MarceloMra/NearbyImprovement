@@ -5,7 +5,7 @@ import com.example.nearbyimprovement.interfaces.Sender;
 
 import java.util.ArrayList;
 
-public class PublisherObject extends PatternComunicationObject implements Sender{
+public abstract class PublisherObject extends PatternComunicationObject implements Sender{
     private ArrayList<String> endpointIDsSubscribed;
 
     public PublisherObject() {

@@ -6,7 +6,7 @@ import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.interfaces.Receiver;
 import com.example.nearbyimprovement.model.GlobalApplication;
 
-public class SubscriberObject extends PatternComunicationObject implements Receiver {
+public abstract class SubscriberObject extends PatternComunicationObject implements Receiver {
 
 
     public SubscriberObject() {
