@@ -28,12 +28,12 @@ public abstract class SubscriberObject extends PatternComunicationObject impleme
     }
 
     @Override
-    protected void novaConexaoEfetuada(String endpointID) {
+    protected void novaConexaoEfetuada(EndpointInfo endpointInfo) {
 
     }
 
     @Override
-    protected void conexaoEncerrada(String endpointID) {
+    protected void conexaoEncerrada(EndpointInfo endpointInfo) {
 
     }
 

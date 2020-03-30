@@ -1,6 +1,7 @@
 package com.example.nearbyimprovement.improvement;
 
 import com.example.nearbyimprovement.enums.Comportamento;
+import com.example.nearbyimprovement.enums.TipoPacote;
 import com.example.nearbyimprovement.interfaces.Sender;
 
 import java.util.ArrayList;
@@ -27,12 +28,12 @@ public abstract class PublisherObject extends PatternComunicationObject implemen
     }
 
     @Override
-    protected void novaConexaoEfetuada(String endpointID) {
+    protected void novaConexaoEfetuada(EndpointInfo endpointInfo) {
 
     }
 
     @Override
-    protected void conexaoEncerrada(String endpointID) {
+    protected void conexaoEncerrada(EndpointInfo endpointInfo) {
 
     }
 
@@ -59,7 +60,7 @@ public abstract class PublisherObject extends PatternComunicationObject implemen
     @Override
     public void send(byte[] dados, String endPointID) {
         for(String endpoint : endpointIDsSubscribed){
-            nearbyAccessObject.send(endpoint, dados);
+            nearbyAccessObject.send(endpoint, dados, TipoPacote.CONTENT);
         }
     }
 }

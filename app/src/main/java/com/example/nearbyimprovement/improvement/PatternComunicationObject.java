@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public abstract class PatternComunicationObject {
     protected NearbyAccessObject nearbyAccessObject;
     protected Comportamento comportamento;
-    private ArrayList<String> endpointIDsConnected;
+    private ArrayList<EndpointInfo> endpointIDsConnected;
 
     public PatternComunicationObject() {
         endpointIDsConnected = new ArrayList<>();
@@ -24,31 +24,45 @@ public abstract class PatternComunicationObject {
         nearbyAccessObject.startDiscovery();
     }
 
-    public void addNewEndpointID(String endpointID){
-        endpointIDsConnected.add(endpointID);
-        novaConexaoEfetuada(endpointID);
+    public void addNewEndpointID(String endpointID, Comportamento c){
+        EndpointInfo epi = new EndpointInfo(endpointID, c);
+        endpointIDsConnected.add(epi);
+        novaConexaoEfetuada(epi);
     }
 
-    protected abstract void novaConexaoEfetuada(String endpointID);
-    protected abstract void conexaoEncerrada(String endpointID);
+    protected abstract void novaConexaoEfetuada(EndpointInfo endpointInfo);
+    protected abstract void conexaoEncerrada(EndpointInfo endpointInfo);
     public abstract void onSuccessStartAdvertising();
     public abstract void onFeilureStartAdvertising(Exception e);
     public abstract void onSuccessStartDiscovery();
     public abstract void onFeilureStartDiscovery(Exception e);
 
     public void removeEndpointID(String endpointID){
-        endpointIDsConnected.remove(endpointID);
-        if(comportamento == Comportamento.PUBLISHER){
-            PublisherObject po = (PublisherObject) this;
-            po.removeSubscricao(endpointID);
+        for(EndpointInfo epi : endpointIDsConnected){
+            if(epi.getEndpointID().equals(endpointID)) {
+                endpointIDsConnected.remove(epi);
+                if (comportamento == Comportamento.PUBLISHER) {
+                    PublisherObject po = (PublisherObject) this;
+                    po.removeSubscricao(endpointID);
+                }
+            }
         }
     }
 
-    public ArrayList<String> getEndpointIDsConnected() {
+    public ArrayList<EndpointInfo> getEndpointIDsConnected() {
         return endpointIDsConnected;
     }
 
     public void setNearbyAccessObject(NearbyAccessObject nearbyAccessObject) {
         this.nearbyAccessObject = nearbyAccessObject;
+    }
+
+    public Comportamento getComportamentoDoEndpointID(String endpointID){
+        for(EndpointInfo epi : endpointIDsConnected){
+            if(epi.getEndpointID().equals(endpointID)){
+                return epi.getComportamento();
+            }
+        }
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package com.example.nearbyimprovement.model;
 
 import com.example.nearbyimprovement.activities.MainActivity;
 import com.example.nearbyimprovement.enums.Comportamento;
+import com.example.nearbyimprovement.improvement.EndpointInfo;
 import com.example.nearbyimprovement.improvement.ReqReplyObject;
 
 import java.nio.charset.StandardCharsets;
@@ -20,15 +21,15 @@ public class MyReqReplyObject extends ReqReplyObject {
     }
 
     @Override
-    protected void novaConexaoEfetuada(String endpointID) {
+    protected void novaConexaoEfetuada(EndpointInfo endpointInfo) {
         mainActivity.liberarCamposEnvio();
         mainActivity.atualizarSpinIDsConectados();
-        mainActivity.mostrarMensagemDeControleEmTela("Nova conexão com "+endpointID+"!");
+        mainActivity.mostrarMensagemDeControleEmTela("Nova conexão com "+endpointInfo.getEndpointID()+"!");
     }
 
     @Override
-    protected void conexaoEncerrada(String endpointID) {
-        mainActivity.mostrarMensagemDeControleEmTela("Conexão com "+endpointID+" foi encerrada!");
+    protected void conexaoEncerrada(EndpointInfo endpointInfo) {
+        mainActivity.mostrarMensagemDeControleEmTela("Conexão com "+endpointInfo.getEndpointID()+" foi encerrada!");
         mainActivity.atualizarSpinIDsConectados();
     }
 
