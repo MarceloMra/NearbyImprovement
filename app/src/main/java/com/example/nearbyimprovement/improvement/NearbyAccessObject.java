@@ -85,30 +85,30 @@ public class NearbyAccessObject {
                         }
                         break;
                     case "-@-vent-@-":
-                        if(patternComunicationObject.getComportamento() != Comportamento.REQUESTER){
+                        if(patternComunicationObject.getComportamento() != Comportamento.WORKER){
                             //fecha a conexão por incompatibilidade dos comportamentos
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.REPLYER);
+                            adicionarNovoEndpointID(endPointId, Comportamento.VENTILATOR);
                         }
                         break;
                     case "-@-work-@-":
-                        if(patternComunicationObject.getComportamento() != Comportamento.REQUESTER){
+                        if(patternComunicationObject.getComportamento() != Comportamento.SYNCR || patternComunicationObject.getComportamento() != Comportamento.VENTILATOR){
                             //fecha a conexão por incompatibilidade dos comportamentos
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.REPLYER);
+                            adicionarNovoEndpointID(endPointId, Comportamento.WORKER);
                         }
                         break;
                     case "-@-sync-@-":
-                        if(patternComunicationObject.getComportamento() != Comportamento.REQUESTER){
+                        if(patternComunicationObject.getComportamento() != Comportamento.WORKER){
                             //fecha a conexão por incompatibilidade dos comportamentos
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.REPLYER);
+                            adicionarNovoEndpointID(endPointId, Comportamento.SYNCR);
                         }
                         break;
                     case "-@-subscribe-@-":
