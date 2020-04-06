@@ -18,48 +18,6 @@ public abstract class SubscriberObject extends PatternComunicationObject impleme
         Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "requisição de Subscrição efetuada! ", Toast.LENGTH_LONG).show();
     }
 
-
-    public void onOkSubscription(String endpointID){
-
-    }
-
-    public void onFailSubscription(String endpointID){
-
-    }
-
-    @Override
-    protected void novaConexaoEfetuada(EndpointInfo endpointInfo) {
-
-    }
-
-    @Override
-    protected void conexaoEncerrada(EndpointInfo endpointInfo) {
-
-    }
-
-    @Override
-    public void onSuccessStartAdvertising() {
-
-    }
-
-    @Override
-    public void onFeilureStartAdvertising(Exception e) {
-
-    }
-
-    @Override
-    public void onSuccessStartDiscovery() {
-
-    }
-
-    @Override
-    public void onFeilureStartDiscovery(Exception e) {
-
-    }
-
-    @Override
-    public void receive(byte[] dados, String endpointID) {
-
-    }
-
+    public abstract void onOkSubscription(String endpointID);
+    public abstract void onFailSubscription(String endpointID);
 }

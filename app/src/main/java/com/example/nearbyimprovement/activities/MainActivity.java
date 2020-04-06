@@ -22,6 +22,9 @@ import com.example.nearbyimprovement.model.Mensagem;
 import com.example.nearbyimprovement.model.MyPublisherObject;
 import com.example.nearbyimprovement.model.MyReqReplyObject;
 import com.example.nearbyimprovement.model.MySubscriberObject;
+import com.example.nearbyimprovement.model.MySyncObject;
+import com.example.nearbyimprovement.model.MyVentilatorObject;
+import com.example.nearbyimprovement.model.MyWorkerObject;
 
 import java.util.ArrayList;
 
@@ -134,7 +137,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnOkProcess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 
     private void inicializarObjetosDeComunicacao(){
@@ -150,11 +158,11 @@ public class MainActivity extends AppCompatActivity {
             }else if (spinComportamento.getSelectedItemId() == 3){
                 patternComunicationObject = new MyReqReplyObject(Comportamento.REPLYER, this);
             }else if (spinComportamento.getSelectedItemId() == 4){
-                //patternComunicationObject = new MyReqReplyObject(Comportamento.VENTILATOR, this);
+                patternComunicationObject = new MyVentilatorObject(this);
             }else if (spinComportamento.getSelectedItemId() == 5){
-                //patternComunicationObject = new MyReqReplyObject(Comportamento.WORKER, this);
+                patternComunicationObject = new MyWorkerObject(this);
             }else if (spinComportamento.getSelectedItemId() == 6){
-                //patternComunicationObject = new MyReqReplyObject(Comportamento.SYNCR, this);
+                patternComunicationObject = new MySyncObject(this);
             }
 
             nearbyAccessObject = new NearbyAccessObject(patternComunicationObject, txtNickName.getText().toString());

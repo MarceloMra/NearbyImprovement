@@ -6,7 +6,7 @@ import com.example.nearbyimprovement.interfaces.SenderAllOnce;
 
 import java.util.ArrayList;
 
-public class VentilatorObject extends PatternComunicationObject implements SenderAllOnce {
+public abstract class VentilatorObject extends PatternComunicationObject implements SenderAllOnce {
     private ArrayList<ArrayList<byte[]>> mensagens;
     private ArrayList<ArrayList<byte[]>> mensagensEmFilaParaEnvio;
 
@@ -23,36 +23,6 @@ public class VentilatorObject extends PatternComunicationObject implements Sende
                 nearbyAccessObject.send(epi.getEndpointID(), "-@-OKprocessing-@-".getBytes(), TipoPacote.CONTROL);
             }
         }
-    }
-
-    @Override
-    protected void novaConexaoEfetuada(EndpointInfo endpointInfo) {
-
-    }
-
-    @Override
-    protected void conexaoEncerrada(EndpointInfo endpointInfo) {
-
-    }
-
-    @Override
-    public void onSuccessStartAdvertising() {
-
-    }
-
-    @Override
-    public void onFeilureStartAdvertising(Exception e) {
-
-    }
-
-    @Override
-    public void onSuccessStartDiscovery() {
-
-    }
-
-    @Override
-    public void onFeilureStartDiscovery(Exception e) {
-
     }
 
     @Override
@@ -78,7 +48,6 @@ public class VentilatorObject extends PatternComunicationObject implements Sende
         }else{
             enviarDadosEmFilaPorRoundRobin();
         }
-
     }
 
     private void enviarDadosEmFilaPorRoundRobin(){

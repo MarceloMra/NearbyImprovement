@@ -28,36 +28,6 @@ public abstract class PublisherObject extends PatternComunicationObject implemen
     }
 
     @Override
-    protected void novaConexaoEfetuada(EndpointInfo endpointInfo) {
-
-    }
-
-    @Override
-    protected void conexaoEncerrada(EndpointInfo endpointInfo) {
-
-    }
-
-    @Override
-    public void onSuccessStartAdvertising() {
-
-    }
-
-    @Override
-    public void onFeilureStartAdvertising(Exception e) {
-
-    }
-
-    @Override
-    public void onSuccessStartDiscovery() {
-
-    }
-
-    @Override
-    public void onFeilureStartDiscovery(Exception e) {
-
-    }
-
-    @Override
     public void send(byte[] dados, String endPointID) {
         for(String endpoint : endpointIDsSubscribed){
             nearbyAccessObject.send(endpoint, dados, TipoPacote.CONTENT);
