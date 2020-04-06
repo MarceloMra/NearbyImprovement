@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.nearbyimprovement.R;
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.improvement.NearbyAccessObject;
@@ -25,7 +26,7 @@ import com.example.nearbyimprovement.model.MySubscriberObject;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnConfirmComport, btnIniciarAnuncDesc, btnEnviar, btnSubscreverServico;
+    private Button btnConfirmComport, btnIniciarAnuncDesc, btnEnviar, btnSubscreverServico, btnOkProcess;
     private EditText txtNickName, txtMensagem;
     private Spinner spinComportamento, spinIdsConnected, spinModo;
     private RecyclerView rvMensagens;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         btnEnviar = (Button) findViewById(R.id.btnEnviar);
         btnIniciarAnuncDesc = (Button) findViewById(R.id.btnIniciarDescobAnuncio);
         btnSubscreverServico = (Button) findViewById(R.id.btnSubscreverServico);
+        btnOkProcess = (Button) findViewById(R.id.btnOkProcess);
         txtMensagem = (EditText) findViewById(R.id.txtMensagem);
         txtNickName = (EditText) findViewById(R.id.txtNickName);
         spinComportamento = (Spinner) findViewById(R.id.spinComportamento);
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         btnEnviar.setEnabled(false);
         btnSubscreverServico.setEnabled(false);
         txtMensagem.setEnabled(false);
+        btnOkProcess.setEnabled(false);
         spinModo.setEnabled(false);
 
         btnConfirmComport.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     private void inicializarObjetosDeComunicacao(){
@@ -144,12 +149,18 @@ public class MainActivity extends AppCompatActivity {
                 patternComunicationObject = new MyReqReplyObject(Comportamento.REQUESTER, this);
             }else if (spinComportamento.getSelectedItemId() == 3){
                 patternComunicationObject = new MyReqReplyObject(Comportamento.REPLYER, this);
+            }else if (spinComportamento.getSelectedItemId() == 4){
+                //patternComunicationObject = new MyReqReplyObject(Comportamento.VENTILATOR, this);
+            }else if (spinComportamento.getSelectedItemId() == 5){
+                //patternComunicationObject = new MyReqReplyObject(Comportamento.WORKER, this);
+            }else if (spinComportamento.getSelectedItemId() == 6){
+                //patternComunicationObject = new MyReqReplyObject(Comportamento.SYNCR, this);
             }
 
             nearbyAccessObject = new NearbyAccessObject(patternComunicationObject, txtNickName.getText().toString());
             patternComunicationObject.setNearbyAccessObject(nearbyAccessObject);
             if(arrayAdapter == null){
-                arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, patternComunicationObject.getEndpointIDsConnected());
+                arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, patternComunicationObject.getEndpointIDsConnectedString());
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinIdsConnected.setAdapter(arrayAdapter);
             }
@@ -158,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             btnConfirmComport.setEnabled(false);
             spinComportamento.setEnabled(false);
             txtNickName.setEnabled(false);
+            btnOkProcess.setEnabled(true);
 
             Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "NickName e Comportamento confirmados! O dispositivo está pronto para se conectar a outros dispositivos.", Toast.LENGTH_LONG).show();
         }
@@ -172,6 +184,10 @@ public class MainActivity extends AppCompatActivity {
         }
         if(patternComunicationObject.getComportamento() == Comportamento.SUBSCRIBER){
             btnSubscreverServico.setEnabled(true);
+        }
+
+        if(patternComunicationObject.getComportamento() == Comportamento.VENTILATOR || patternComunicationObject.getComportamento() == Comportamento.WORKER){
+            btnOkProcess.setEnabled(true);
         }
         arrayAdapter.notifyDataSetChanged();
     }

@@ -5,5 +5,8 @@
         <item>Subscriber</item>
         <item>Requester</item>
         <item>Replyer</item>
+        <item>Ventilator</item>
+        <item>Worker</item>
+        <item>Sync</item>
     </string-array>
 </resources>

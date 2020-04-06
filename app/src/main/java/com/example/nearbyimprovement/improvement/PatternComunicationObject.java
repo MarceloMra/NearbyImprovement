@@ -8,9 +8,11 @@ public abstract class PatternComunicationObject {
     protected NearbyAccessObject nearbyAccessObject;
     protected Comportamento comportamento;
     private ArrayList<EndpointInfo> endpointIDsConnected;
+    private ArrayList<String> endpointIDsConnectedString;
 
     public PatternComunicationObject() {
         endpointIDsConnected = new ArrayList<>();
+        endpointIDsConnectedString = new ArrayList<>();
     }
 
     public Comportamento getComportamento() {
@@ -27,6 +29,7 @@ public abstract class PatternComunicationObject {
     public void addNewEndpointID(String endpointID, Comportamento c){
         EndpointInfo epi = new EndpointInfo(endpointID, c);
         endpointIDsConnected.add(epi);
+        endpointIDsConnectedString.add(endpointID);
         novaConexaoEfetuada(epi);
     }
 
@@ -41,6 +44,7 @@ public abstract class PatternComunicationObject {
         for(EndpointInfo epi : endpointIDsConnected){
             if(epi.getEndpointID().equals(endpointID)) {
                 endpointIDsConnected.remove(epi);
+                endpointIDsConnected.remove(epi.getEndpointID());
                 if (comportamento == Comportamento.PUBLISHER) {
                     PublisherObject po = (PublisherObject) this;
                     po.removeSubscricao(endpointID);
@@ -51,6 +55,10 @@ public abstract class PatternComunicationObject {
 
     public ArrayList<EndpointInfo> getEndpointIDsConnected() {
         return endpointIDsConnected;
+    }
+
+    public ArrayList<String> getEndpointIDsConnectedString() {
+        return endpointIDsConnectedString;
     }
 
     public void setNearbyAccessObject(NearbyAccessObject nearbyAccessObject) {

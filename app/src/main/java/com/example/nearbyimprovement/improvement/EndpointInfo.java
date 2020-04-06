@@ -26,4 +26,13 @@ public class EndpointInfo {
     public void setComportamento(Comportamento comportamento) {
         this.comportamento = comportamento;
     }
+
+    @Override
+    public boolean equals(Object o){
+        EndpointInfo endpointInfo = (EndpointInfo) o;
+        if(endpointInfo.getComportamento() == this.getComportamento() && endpointInfo.getEndpointID().equals(this.getEndpointID())){
+            return true;
+        }
+        return false;
+    }
 }
