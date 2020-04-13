@@ -16,6 +16,7 @@ import com.example.nearbyimprovement.R;
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.improvement.NearbyAccessObject;
 import com.example.nearbyimprovement.improvement.PatternComunicationObject;
+import com.example.nearbyimprovement.interfaces.Concluivel;
 import com.example.nearbyimprovement.model.AdapterMensagens;
 import com.example.nearbyimprovement.model.GlobalApplication;
 import com.example.nearbyimprovement.model.Mensagem;
@@ -140,7 +141,10 @@ public class MainActivity extends AppCompatActivity {
         btnOkProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(patternComunicationObject.getComportamento() == Comportamento.VENTILATOR || patternComunicationObject.getComportamento() == Comportamento.WORKER){
+                    Concluivel concl = (Concluivel) patternComunicationObject;
+                    concl.comunicarConclusao();
+                }
             }
         });
     }

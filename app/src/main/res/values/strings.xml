@@ -4,7 +4,7 @@
     <string name="nickname">NickName:</string>
     <string name="comportamento">Comportamento:</string>
     <string name="confirmar_comportamento">Confirmar Comportamento</string>
-    <string name="iniciar_descoberta_e_an_ncio">Iniciar descoberta e anúncio</string>
+    <string name="iniciar_descoberta_e_an_ncio">Iniciar descoberta ou anúncio</string>
     <string name="enviar">Enviar</string>
     <string name="enviar_para">EndpointID Selecionado:</string>
     <string name="subscrever_servi_o">Subscrever serviço</string>

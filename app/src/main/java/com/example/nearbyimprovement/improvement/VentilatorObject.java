@@ -2,11 +2,12 @@ package com.example.nearbyimprovement.improvement;
 
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.enums.TipoPacote;
+import com.example.nearbyimprovement.interfaces.Concluivel;
 import com.example.nearbyimprovement.interfaces.SenderAllOnce;
 
 import java.util.ArrayList;
 
-public abstract class VentilatorObject extends PatternComunicationObject implements SenderAllOnce {
+public abstract class VentilatorObject extends PatternComunicationObject implements SenderAllOnce, Concluivel {
     private ArrayList<ArrayList<byte[]>> mensagens;
     private ArrayList<ArrayList<byte[]>> mensagensEmFilaParaEnvio;
 
@@ -17,6 +18,7 @@ public abstract class VentilatorObject extends PatternComunicationObject impleme
         mensagensEmFilaParaEnvio = new ArrayList<>();
     }
 
+    @Override
     public void comunicarConclusao(){
         for (EndpointInfo epi : super.getEndpointIDsConnected()){
             if(epi.getComportamento() == Comportamento.WORKER){
