@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.example.nearbyimprovement.R;
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.enums.TipoPacote;
-import com.example.nearbyimprovement.interfaces.RecebedorDeComunicacoesDeConclusao;
+import com.example.nearbyimprovement.interfaces.RecebedorDeConclusoes;
 import com.example.nearbyimprovement.interfaces.Receiver;
 import com.example.nearbyimprovement.model.GlobalApplication;
 import com.google.android.gms.nearby.Nearby;
@@ -170,7 +170,7 @@ public class NearbyAccessObject {
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            RecebedorDeComunicacoesDeConclusao rcc = (RecebedorDeComunicacoesDeConclusao) patternComunicationObject;
+                            RecebedorDeConclusoes rcc = (RecebedorDeConclusoes) patternComunicationObject;
                             rcc.onComunicacaoDeConclusaoRecebida(endPointId);
                         }
                         break;
