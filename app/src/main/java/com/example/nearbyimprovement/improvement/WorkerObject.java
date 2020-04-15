@@ -3,17 +3,16 @@ package com.example.nearbyimprovement.improvement;
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.enums.TipoPacote;
 import com.example.nearbyimprovement.interfaces.Concluivel;
+import com.example.nearbyimprovement.interfaces.RecebedorDeComunicacoesDeConclusao;
 import com.example.nearbyimprovement.interfaces.Receiver;
 import com.example.nearbyimprovement.interfaces.Sender;
 
-public abstract class WorkerObject extends PatternComunicationObject implements Sender, Receiver, Concluivel {
+public abstract class WorkerObject extends PatternComunicationObject implements Sender, Receiver, Concluivel, RecebedorDeComunicacoesDeConclusao {
 
     public WorkerObject() {
         super();
         super.comportamento = Comportamento.WORKER;
     }
-
-    public abstract void onComunicacaoDeConclusaoRecebida(String endpointID);
 
     @Override
     public void send(byte[] dados, String endPointID) {

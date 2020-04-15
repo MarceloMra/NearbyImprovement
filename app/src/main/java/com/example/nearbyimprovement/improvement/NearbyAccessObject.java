@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.example.nearbyimprovement.R;
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.enums.TipoPacote;
+import com.example.nearbyimprovement.interfaces.RecebedorDeComunicacoesDeConclusao;
 import com.example.nearbyimprovement.interfaces.Receiver;
 import com.example.nearbyimprovement.model.GlobalApplication;
 import com.google.android.gms.nearby.Nearby;
@@ -54,7 +55,11 @@ public class NearbyAccessObject {
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.PUBLISHER);
+                            if(podeAdiconarMaisUmaConexao(1)) {
+                                adicionarNovoEndpointID(endPointId, Comportamento.PUBLISHER);
+                            }else{
+                                fecharConexao(endPointId);
+                            }
                         }
                         break;
                     case "-@-sub-@-":
@@ -72,7 +77,11 @@ public class NearbyAccessObject {
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.REQUESTER);
+                            if(podeAdiconarMaisUmaConexao(1)) {
+                                adicionarNovoEndpointID(endPointId, Comportamento.REQUESTER);
+                            }else{
+                                fecharConexao(endPointId);
+                            }
                         }
                         break;
                     case "-@-rep-@-":
@@ -81,7 +90,11 @@ public class NearbyAccessObject {
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.REPLYER);
+                            if(podeAdiconarMaisUmaConexao(1)) {
+                                adicionarNovoEndpointID(endPointId, Comportamento.REPLYER);
+                            }else{
+                                fecharConexao(endPointId);
+                            }
                         }
                         break;
                     case "-@-vent-@-":
@@ -90,7 +103,11 @@ public class NearbyAccessObject {
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.VENTILATOR);
+                            if(getQtdConexoesCompWorker(Comportamento.VENTILATOR) < 1){
+                                adicionarNovoEndpointID(endPointId, Comportamento.VENTILATOR);
+                            }else{
+                                fecharConexao(endPointId);
+                            }
                         }
                         break;
                     case "-@-work-@-":
@@ -108,7 +125,11 @@ public class NearbyAccessObject {
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.SYNCR);
+                            if(getQtdConexoesCompWorker(Comportamento.SYNCR) < 1){
+                                adicionarNovoEndpointID(endPointId, Comportamento.SYNCR);
+                            }else{
+                                fecharConexao(endPointId);
+                            }
                         }
                         break;
                     case "-@-subscribe-@-":
@@ -149,13 +170,8 @@ public class NearbyAccessObject {
                             fecharConexao(endPointId);
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            if(patternComunicationObject.getComportamento() == Comportamento.WORKER){
-                                WorkerObject wo = (WorkerObject) patternComunicationObject;
-                                wo.onComunicacaoDeConclusaoRecebida(endPointId);
-                            }else if (patternComunicationObject.getComportamento() == Comportamento.SYNCR) {
-                                SyncObject so = (SyncObject) patternComunicationObject;
-                                so.onComunicacaoDeConclusaoRecebida(endPointId);
-                            }
+                            RecebedorDeComunicacoesDeConclusao rcc = (RecebedorDeComunicacoesDeConclusao) patternComunicationObject;
+                            rcc.onComunicacaoDeConclusaoRecebida(endPointId);
                         }
                         break;
                 }
@@ -242,28 +258,16 @@ public class NearbyAccessObject {
                     String comp = "";
                     switch (patternComunicationObject.getComportamento()){
                         case REQUESTER: comp = "-@-req-@-";
-                            if(verificarQuantidadeConexoes(endpointId, 1)){
-                                return;
-                            }
                             break;
                         case SUBSCRIBER: comp = "-@-sub-@-";
-                            if(verificarQuantidadeConexoes(endpointId, 1)){
-                                return;
-                            }
                             break;
                         case PUBLISHER: comp = "-@-pub-@-";
                             break;
                         case REPLYER: comp = "-@-rep-@-";
-                            if(verificarQuantidadeConexoes(endpointId, 1)){
-                                return;
-                            }
                             break;
                         case VENTILATOR: comp = "-@-vent-@-";
                             break;
                         case WORKER: comp = "-@-work-@-";
-                            if(verificarQuantidadeConexoes(endpointId, 2)){
-                                return;
-                            }
                             break;
                         case SYNCR: comp = "-@-sync-@-";
                             break;
@@ -296,30 +300,26 @@ public class NearbyAccessObject {
         }
     };
 
-    private boolean verificarQuantidadeConexoes(String endpointID, int qtdConexõesMaximas){
-        int qtdVentConected = 0, qtdSyncConected = 0;
-
-        //Caso expecional do Worker que só pode se conectar à no máximo 2 sendo 1 ventilator e um sync
-        if(patternComunicationObject.getComportamento() == Comportamento.WORKER){
-            for(EndpointInfo epi : patternComunicationObject.getEndpointIDsConnected()){
-                if(epi.getComportamento() == Comportamento.VENTILATOR) {
-                    qtdVentConected++;
-                }else if(epi.getComportamento() == Comportamento.SYNCR){
-                    qtdSyncConected++;
-                }
-            }
-
-            if(qtdSyncConected > 1 || qtdVentConected > 1){
-                fecharConexao(endpointID);
-            }
-        }
-
-        if(patternComunicationObject.getEndpointIDsConnected().size() > qtdConexõesMaximas){
-            fecharConexao(endpointID);
+    private boolean podeAdiconarMaisUmaConexao(int qtdConexoesMaximas){
+        if(patternComunicationObject.getEndpointIDsConnected().size() < qtdConexoesMaximas){
             return true;
         }else{
             return false;
         }
+    }
+
+    private int getQtdConexoesCompWorker(Comportamento compVerificar){
+        int qtdCompConected = 0;
+
+        //Caso expecional do Worker que só pode se conectar à no máximo 2 sendo 1 ventilator e um sync
+        if(patternComunicationObject.getComportamento() == Comportamento.WORKER){
+            for(EndpointInfo epi : patternComunicationObject.getEndpointIDsConnected()){
+                if(epi.getComportamento() == compVerificar) {
+                    qtdCompConected++;
+                }
+            }
+        }
+        return qtdCompConected;
     }
 
     public NearbyAccessObject(PatternComunicationObject patternComunicationObject, String nickname) {
