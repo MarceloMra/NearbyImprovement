@@ -1,4 +1,4 @@
-package com.example.nearbyimprovement.model;
+package com.example.nearbyimprovement.improvement;
 
 import android.app.Application;
 import android.content.Context;

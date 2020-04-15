@@ -4,7 +4,6 @@ import android.widget.Toast;
 
 import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.interfaces.Receiver;
-import com.example.nearbyimprovement.model.GlobalApplication;
 
 public abstract class SubscriberObject extends PatternComunicationObject implements Receiver {
 

@@ -18,7 +18,7 @@ import com.example.nearbyimprovement.improvement.NearbyAccessObject;
 import com.example.nearbyimprovement.improvement.PatternComunicationObject;
 import com.example.nearbyimprovement.interfaces.Concluivel;
 import com.example.nearbyimprovement.model.AdapterMensagens;
-import com.example.nearbyimprovement.model.GlobalApplication;
+import com.example.nearbyimprovement.improvement.GlobalApplication;
 import com.example.nearbyimprovement.model.Mensagem;
 import com.example.nearbyimprovement.model.MyPublisherObject;
 import com.example.nearbyimprovement.model.MyReqReplyObject;

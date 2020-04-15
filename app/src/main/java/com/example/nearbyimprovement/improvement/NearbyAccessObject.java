@@ -9,7 +9,6 @@ import com.example.nearbyimprovement.enums.Comportamento;
 import com.example.nearbyimprovement.enums.TipoPacote;
 import com.example.nearbyimprovement.interfaces.RecebedorDeConclusoes;
 import com.example.nearbyimprovement.interfaces.Receiver;
-import com.example.nearbyimprovement.model.GlobalApplication;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
