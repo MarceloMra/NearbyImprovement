@@ -22,7 +22,7 @@ public abstract class VentilatorObject extends PatternComunicationObject impleme
     public void comunicarConclusao(){
         for (EndpointInfo epi : super.getEndpointIDsConnected()){
             if(epi.getComportamento() == Comportamento.WORKER){
-                nearbyAccessObject.send(epi.getEndpointID(), "-@-OKprocessing-@-".getBytes(), TipoPacote.CONTROL);
+                nearbyAccessObject.comunicaConclusao(epi.getEndpointID(), "-@-OKprocessing-@-");
             }
         }
     }

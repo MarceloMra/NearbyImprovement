@@ -105,17 +105,19 @@ public class NearbyAccessObject {
                             if(getQtdConexoesCompWorker(Comportamento.VENTILATOR) < 1){
                                 adicionarNovoEndpointID(endPointId, Comportamento.VENTILATOR);
                             }else{
+                                Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "desconectou por quantidade de ventilators", Toast.LENGTH_LONG).show();
                                 fecharConexao(endPointId);
                             }
                         }
                         break;
                     case "-@-work-@-":
-                        if(patternComunicationObject.getComportamento() != Comportamento.SYNCR || patternComunicationObject.getComportamento() != Comportamento.VENTILATOR){
+                        if(patternComunicationObject.getComportamento() == Comportamento.SYNCR || patternComunicationObject.getComportamento() == Comportamento.VENTILATOR){
                             //fecha a conexão por incompatibilidade dos comportamentos
-                            fecharConexao(endPointId);
+                            adicionarNovoEndpointID(endPointId, Comportamento.WORKER);
+
                         }else{
                             //notifica ao patternObject o endpointID do novo dispositivo conectado
-                            adicionarNovoEndpointID(endPointId, Comportamento.WORKER);
+                            fecharConexao(endPointId);
                         }
                         break;
                     case "-@-sync-@-":
@@ -127,6 +129,7 @@ public class NearbyAccessObject {
                             if(getQtdConexoesCompWorker(Comportamento.SYNCR) < 1){
                                 adicionarNovoEndpointID(endPointId, Comportamento.SYNCR);
                             }else{
+                                Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "desconectou por quantidade de syncs", Toast.LENGTH_LONG).show();
                                 fecharConexao(endPointId);
                             }
                         }
@@ -164,13 +167,14 @@ public class NearbyAccessObject {
                         }
                         break;
                     case "-@-OKprocessing-@-":
-                        if(patternComunicationObject.getComportamento() != Comportamento.WORKER || patternComunicationObject.getComportamento() != Comportamento.SYNCR){
+                        if(patternComunicationObject.getComportamento() == Comportamento.WORKER || patternComunicationObject.getComportamento() == Comportamento.SYNCR){
                             //fecha a conexão por incompatibilidade dos comportamentos ou retornar uma mensagem de controle
-                            fecharConexao(endPointId);
-                        }else{
-                            //notifica ao patternObject o endpointID do novo dispositivo conectado
                             RecebedorDeConclusoes rcc = (RecebedorDeConclusoes) patternComunicationObject;
                             rcc.onComunicacaoDeConclusaoRecebida(endPointId);
+
+                        }else{
+                            //notifica ao patternObject o endpointID do novo dispositivo conectado
+                            fecharConexao(endPointId);
                         }
                         break;
                 }
@@ -348,6 +352,17 @@ public class NearbyAccessObject {
 
     public void send(String endpointID, byte[] dados, TipoPacote tipoPacote){
         Pacote pac = new Pacote(tipoPacote, dados);
+        Payload p = null;
+        try {
+            p = Payload.fromBytes(Services.serialize(pac));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Nearby.getConnectionsClient(GlobalApplication.getContext().getApplicationContext()).sendPayload(endpointID, p);
+    }
+
+    public void comunicaConclusao(String endpointID, String dadoControle){
+        Pacote pac = new Pacote(TipoPacote.CONTROL, dadoControle);
         Payload p = null;
         try {
             p = Payload.fromBytes(Services.serialize(pac));

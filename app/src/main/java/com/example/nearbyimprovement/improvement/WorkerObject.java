@@ -16,14 +16,21 @@ public abstract class WorkerObject extends PatternComunicationObject implements 
 
     @Override
     public void send(byte[] dados, String endPointID) {
-        nearbyAccessObject.send(endPointID, dados, TipoPacote.CONTENT);
+        for(EndpointInfo e : getEndpointIDsConnected()){
+            if(e.getEndpointID().equals(endPointID)){
+                if(e.getComportamento() == Comportamento.SYNCR){
+                    nearbyAccessObject.send(endPointID, dados, TipoPacote.CONTENT);
+                }
+                break;
+            }
+        }
     }
 
     @Override
     public void comunicarConclusao(){
         for (EndpointInfo epi : super.getEndpointIDsConnected()){
             if(epi.getComportamento() == Comportamento.SYNCR){
-                nearbyAccessObject.send(epi.getEndpointID(), "-@-OKprocessing-@-".getBytes(), TipoPacote.CONTROL);
+                nearbyAccessObject.comunicaConclusao(epi.getEndpointID(), "-@-OKprocessing-@-");
             }
         }
     }

@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(patternComunicationObject instanceof MyPublisherObject || patternComunicationObject instanceof MyReqReplyObject){
+                if(patternComunicationObject instanceof MyPublisherObject || patternComunicationObject instanceof MyReqReplyObject || patternComunicationObject instanceof MyVentilatorObject || patternComunicationObject instanceof MyWorkerObject){
                     String endpointIDSelected = (String) spinIdsConnected.getSelectedItem();
                     if(patternComunicationObject instanceof MyPublisherObject){
                         MyPublisherObject mpo = (MyPublisherObject) patternComunicationObject;
@@ -113,6 +113,22 @@ public class MainActivity extends AppCompatActivity {
                         if(spinIdsConnected.getSelectedItem() != null) {
                             MyReqReplyObject mro = (MyReqReplyObject) patternComunicationObject;
                             mro.send(txtMensagem.getText().toString().getBytes(), endpointIDSelected);
+                        }else{
+                            mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
+                        }
+                    }else if(patternComunicationObject instanceof MyVentilatorObject){
+                        if(spinIdsConnected.getSelectedItem() != null) {
+                            MyVentilatorObject mro = (MyVentilatorObject) patternComunicationObject;
+                            ArrayList<byte[]> a = new ArrayList<byte[]>();
+                            a.add(txtMensagem.getText().toString().getBytes());
+                            mro.send(a);
+                        }else{
+                            mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
+                        }
+                    }else if(patternComunicationObject instanceof MyWorkerObject){
+                        if(spinIdsConnected.getSelectedItem() != null) {
+                            MyWorkerObject mro = (MyWorkerObject) patternComunicationObject;
+                            mro.send(txtMensagem.getText().toString().getBytes(),endpointIDSelected);
                         }else{
                             mostrarMensagemDeControleEmTela("Nenhum endpointID selecionado!");
                         }
@@ -163,8 +179,10 @@ public class MainActivity extends AppCompatActivity {
                 patternComunicationObject = new MyReqReplyObject(Comportamento.REPLYER, this);
             }else if (spinComportamento.getSelectedItemId() == 4){
                 patternComunicationObject = new MyVentilatorObject(this);
+                btnOkProcess.setEnabled(true);
             }else if (spinComportamento.getSelectedItemId() == 5){
                 patternComunicationObject = new MyWorkerObject(this);
+                btnOkProcess.setEnabled(true);
             }else if (spinComportamento.getSelectedItemId() == 6){
                 patternComunicationObject = new MySyncObject(this);
             }
@@ -181,14 +199,14 @@ public class MainActivity extends AppCompatActivity {
             btnConfirmComport.setEnabled(false);
             spinComportamento.setEnabled(false);
             txtNickName.setEnabled(false);
-            btnOkProcess.setEnabled(true);
+
 
             Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "NickName e Comportamento confirmados! O dispositivo está pronto para se conectar a outros dispositivos.", Toast.LENGTH_LONG).show();
         }
     }
 
     public void liberarCamposEnvio(){
-        if(patternComunicationObject != null && (patternComunicationObject.getComportamento() == Comportamento.PUBLISHER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER || patternComunicationObject.getComportamento() == Comportamento.REPLYER )){
+        if(patternComunicationObject != null && (patternComunicationObject.getComportamento() == Comportamento.PUBLISHER || patternComunicationObject.getComportamento() == Comportamento.REQUESTER || patternComunicationObject.getComportamento() == Comportamento.REPLYER || patternComunicationObject.getComportamento() == Comportamento.VENTILATOR || patternComunicationObject.getComportamento() == Comportamento.WORKER)){
             txtMensagem.setEnabled(true);
             btnEnviar.setEnabled(true);
 
