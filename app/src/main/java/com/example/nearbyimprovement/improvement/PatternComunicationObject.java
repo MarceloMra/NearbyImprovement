@@ -44,7 +44,7 @@ public abstract class PatternComunicationObject {
         for(EndpointInfo epi : endpointIDsConnected){
             if(epi.getEndpointID().equals(endpointID)) {
                 endpointIDsConnected.remove(epi);
-                endpointIDsConnected.remove(epi.getEndpointID());
+                endpointIDsConnectedString.remove(epi.getEndpointID());
                 if (comportamento == Comportamento.PUBLISHER) {
                     PublisherObject po = (PublisherObject) this;
                     po.removeSubscricao(endpointID);

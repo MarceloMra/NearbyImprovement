@@ -209,7 +209,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void atualizarSpinIDsConectados(){
-        arrayAdapter.notifyDataSetChanged();
+        if(patternComunicationObject.getEndpointIDsConnectedString().size() > 0) {
+            arrayAdapter.notifyDataSetChanged();
+        }else{
+            arrayAdapter.clear();
+        }
     }
 
     public void addNovaMensagem(String s, String endpointID, String modo){

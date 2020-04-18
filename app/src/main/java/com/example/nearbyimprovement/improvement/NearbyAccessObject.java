@@ -292,8 +292,8 @@ public class NearbyAccessObject {
 
         @Override
         public void onDisconnected(String endpointId) {
-            patternComunicationObject.conexaoEncerrada(new EndpointInfo(endpointId, patternComunicationObject.getComportamentoDoEndpointID(endpointId)));
             patternComunicationObject.removeEndpointID(endpointId);
+            patternComunicationObject.conexaoEncerrada(new EndpointInfo(endpointId, patternComunicationObject.getComportamentoDoEndpointID(endpointId)));
 
             Toast.makeText(GlobalApplication.getContext().getApplicationContext(), "Endpoint desconectou-se! ", Toast.LENGTH_LONG).show();
         }
