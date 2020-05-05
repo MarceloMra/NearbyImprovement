@@ -1,9 +1,9 @@
 package com.example.nearbyimprovement.model;
 
+import com.example.nearbyfenix.enums.Comportamento;
+import com.example.nearbyfenix.improvement.EndpointInfo;
+import com.example.nearbyfenix.improvement.ReqReplyObject;
 import com.example.nearbyimprovement.activities.MainActivity;
-import com.example.nearbyimprovement.enums.Comportamento;
-import com.example.nearbyimprovement.improvement.EndpointInfo;
-import com.example.nearbyimprovement.improvement.ReqReplyObject;
 
 import java.nio.charset.StandardCharsets;
 

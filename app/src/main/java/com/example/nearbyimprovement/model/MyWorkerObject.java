@@ -1,8 +1,8 @@
 package com.example.nearbyimprovement.model;
 
+import com.example.nearbyfenix.improvement.EndpointInfo;
+import com.example.nearbyfenix.improvement.WorkerObject;
 import com.example.nearbyimprovement.activities.MainActivity;
-import com.example.nearbyimprovement.improvement.EndpointInfo;
-import com.example.nearbyimprovement.improvement.WorkerObject;
 
 import java.nio.charset.StandardCharsets;
 

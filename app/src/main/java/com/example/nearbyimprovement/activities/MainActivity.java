@@ -7,18 +7,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.nearbyfenix.enums.Comportamento;
+import com.example.nearbyfenix.improvement.GlobalApplication;
+import com.example.nearbyfenix.improvement.NearbyAccessObject;
+import com.example.nearbyfenix.improvement.PatternComunicationObject;
+import com.example.nearbyfenix.interfaces.Concluivel;
 import com.example.nearbyimprovement.R;
-import com.example.nearbyimprovement.enums.Comportamento;
-import com.example.nearbyimprovement.improvement.NearbyAccessObject;
-import com.example.nearbyimprovement.improvement.PatternComunicationObject;
-import com.example.nearbyimprovement.interfaces.Concluivel;
 import com.example.nearbyimprovement.model.AdapterMensagens;
-import com.example.nearbyimprovement.improvement.GlobalApplication;
 import com.example.nearbyimprovement.model.Mensagem;
 import com.example.nearbyimprovement.model.MyPublisherObject;
 import com.example.nearbyimprovement.model.MyReqReplyObject;
@@ -187,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 patternComunicationObject = new MySyncObject(this);
             }
 
-            nearbyAccessObject = new NearbyAccessObject(patternComunicationObject, txtNickName.getText().toString());
+            nearbyAccessObject = new NearbyAccessObject(patternComunicationObject, txtNickName.getText().toString(), GlobalApplication.getContext().getApplicationContext().getString(R.string.service_id));
             patternComunicationObject.setNearbyAccessObject(nearbyAccessObject);
             if(arrayAdapter == null){
                 arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, patternComunicationObject.getEndpointIDsConnectedString());
